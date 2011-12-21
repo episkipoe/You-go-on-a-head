@@ -1,8 +1,12 @@
 package com.episkipoe.hat.common;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
+import com.episkipoe.hat.client.Main;
 import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
@@ -15,26 +19,32 @@ public class ImageLibrary {
 		images = new HashMap<String,ImageElement>();
 	}
 	
-	public ImageElement getImage(String filename) throws Exception {
-		if(images.containsKey(filename))
-			return images.get(filename);
-		throw new Exception("Could not get image: " + filename + "\n\tValid images are: " + images.keySet());
+	public ImageElement getImage(String filename) {
+		return images.get(filename);
 	}
 	
 	public void loadImage(String filename) {
+		if(images.containsKey(filename)) return ;
 		Image img = new Image("images/"+filename);
 		img.setTitle(filename);
 		img.addLoadHandler(new LoadHandler() {
 		      public void onLoad(LoadEvent event) {
 		    	  Image img = (Image) event.getSource();
 		    	  images.put(img.getTitle(), (ImageElement)img.getElement().cast());
+		    	  Main.room.imageLoaded();
 		      }
 		    });
 		    img.setVisible(false);
 		    RootPanel.get().add(img); // image must be on page to fire load
 	}
-	public void loadImages(String [] filenames) {
-		for(String f: filenames) loadImage(f);
+	public void loadImages(Collection<String> filenames) {
+		Set<String> fileSet = new HashSet<String>();
+		for(String f: filenames) fileSet.add(f);
+		for(String f: fileSet) loadImage(f);
+	}
+
+	public boolean contains(String filename) {
+		return images.containsKey(filename);
 	}
 
 }

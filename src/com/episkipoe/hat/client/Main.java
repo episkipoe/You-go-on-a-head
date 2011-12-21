@@ -49,12 +49,11 @@ public class Main implements EntryPoint {
         canvas.setCoordinateSpaceHeight(canvasHeight);
         
 		currentMousePos = new Point();
-		loadImages();
- 
-        RootPanel.get().add(canvas);
 		player = new Player();
-		setMouseMode(new MovePlayer());
-		room = new MagicRoom();
+		player.setLocation(new Point(canvasWidth*0.5, canvasHeight*0.5));
+		loadImages();
+        RootPanel.get().add(canvas);
+		switchRoom(new MagicRoom());
         
         // setup timer
         final Timer timer = new Timer() {
@@ -85,12 +84,19 @@ public class Main implements EntryPoint {
 	 */
 	static private void loadImages() {
 		images = new ImageLibrary();
-		String [] fileNames = { 
-				"StickMan.png",
-				"MagicRoom.png",
-				"TopHat.png"
-		};
-		images.loadImages(fileNames);	
+		images.loadImage(player.getFilename());	
+	}
+
+	public static class StartGame implements Runnable {
+		@Override
+		public void run() {
+			setMouseMode(new MovePlayer());
+		}
+	}
+	
+	static public void switchRoom(Room newRoom) {
+		room = newRoom;
+		images.loadImages(room.getAllImages());
 	}
 	
 	/*
@@ -112,5 +118,6 @@ public class Main implements EntryPoint {
 	
 	static private Point currentMousePos;
 	static public Point getCurrentPos() { return currentMousePos; }
-	
+
+
 }

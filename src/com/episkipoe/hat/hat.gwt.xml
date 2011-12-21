@@ -17,7 +17,7 @@
   <entry-point class='com.episkipoe.hat.client.Main'/>
 
   <!-- Specify the paths for translatable code                    -->
-  <source path='agents'/>
+  <source path='characters'/>
   <source path='client'/>
   <source path='common'/>
   <source path='events'/>
