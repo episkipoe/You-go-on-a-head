@@ -4,11 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.episkipoe.hat.client.Main;
-import com.episkipoe.hat.common.Dialog;
-import com.episkipoe.hat.common.Drawable;
-import com.episkipoe.hat.common.ImageDrawable;
-import com.episkipoe.hat.common.ImageUtils;
 import com.episkipoe.hat.common.Point;
+import com.episkipoe.hat.common.dialog.Dialog;
+import com.episkipoe.hat.common.draw.Drawable;
+import com.episkipoe.hat.common.draw.ImageDrawable;
+import com.episkipoe.hat.common.draw.ImageUtils;
+import com.episkipoe.hat.common.interact.Clickable;
 import com.google.gwt.canvas.dom.client.Context2d;
 
 public abstract class Room {
@@ -24,15 +25,22 @@ public abstract class Room {
 	
 	/**
 	 * 
-	 * @return the image in the main {@link ImageLibrary} to draw full-screen behind everything
+	 *  the image in the main {@link ImageLibrary} to draw full-screen behind everything
 	 */
-	protected String getBackground() { return null; }
+	private String background;
+	public final void setBackground(String background) { this.background = background; }
+	protected final String getBackground() { return background; }
 
 	/**
 	 * called after all required images have been loaded
 	 * 	The scene should start here.
 	 */
-	protected void roomLoaded() {}
+	protected void onLoad() {}
+	/**
+	 * called every time the user clicks to enter the room
+	 * 	Note:  not all images are guaranteed to be loaded at this point
+	 */
+	public void onEnter() { }
 	
 	/**
 	 * Called at the beginning of the Room's draw method (but after the background)
@@ -58,6 +66,17 @@ public abstract class Room {
 	public final void addDrawable(Drawable d) {
 		getDrawables().add(d);
 	}
+	public final void clearDrawables() { getDrawables().clear(); }
+	
+	private List<Clickable> clickables; 
+	private final List<Clickable> getClickables() {
+		if(clickables==null) clickables= new ArrayList<Clickable> ();
+		return clickables;
+	}
+	public final void addClickable(Clickable c) {
+		getClickables().add(c);
+	}	
+	
 	private Dialog dialog;
 	public final Dialog getDialog() { 
 		if(dialog == null) dialog = new Dialog();
@@ -74,17 +93,18 @@ public abstract class Room {
 	/**
 	 * 
 	 * @param point
-	 * @return  all of the {@link ImageDrawable}s that intersect with the point
+	 * @throws Exception 
 	 */
-	public final List<ImageDrawable> getImagesAtPoint(Point point) {
-		List<ImageDrawable> images = new ArrayList<ImageDrawable>();
+	public final void click(Point point) throws Exception {
 		for(Drawable d: getDrawables()) {
-			if(d instanceof ImageDrawable) {
-				ImageDrawable img = (ImageDrawable)d;
-				if(img.intersectsWith(point)) images.add(img);
+			if(d instanceof Clickable) {
+				Clickable target = (Clickable)d;
+				if(target.intersectsWith(point)) target.click();
 			}
 		}
-		return images;
+		for(Clickable c: getClickables()) {
+			if(c.intersectsWith(point)) c.click();
+		}
 	}
 	
 	public final List<String> getAllImages() {
@@ -107,6 +127,6 @@ public abstract class Room {
 		for(String img : getAllImages()) {
 			if(!Main.images.contains(img)) return ;
 		}
-		roomLoaded();
+		onLoad();
 	}
 }

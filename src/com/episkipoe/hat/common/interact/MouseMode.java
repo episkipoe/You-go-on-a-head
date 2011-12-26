@@ -1,4 +1,4 @@
-package com.episkipoe.hat.common;
+package com.episkipoe.hat.common.interact;
 
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.MouseMoveHandler;

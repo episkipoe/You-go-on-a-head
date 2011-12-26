@@ -1,5 +1,6 @@
-package com.episkipoe.hat.common;
+package com.episkipoe.hat.common.draw;
 
+import com.episkipoe.hat.common.Point;
 import com.google.gwt.canvas.dom.client.Context2d;
 
 /**

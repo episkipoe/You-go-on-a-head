@@ -1,4 +1,4 @@
-package com.episkipoe.hat.common;
+package com.episkipoe.hat.common.draw;
 
 import java.util.Collection;
 import java.util.HashMap;

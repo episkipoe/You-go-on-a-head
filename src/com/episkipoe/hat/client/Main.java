@@ -1,13 +1,22 @@
 package com.episkipoe.hat.client;
 
 
-import com.episkipoe.hat.common.ImageLibrary;
-import com.episkipoe.hat.common.MouseMode;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.episkipoe.hat.common.GameStorage;
+import com.episkipoe.hat.common.InventoryImage;
 import com.episkipoe.hat.common.Point;
-import com.episkipoe.hat.player.MovePlayer;
+import com.episkipoe.hat.common.draw.ImageLibrary;
+import com.episkipoe.hat.common.interact.MouseMode;
 import com.episkipoe.hat.player.Player;
+import com.episkipoe.hat.rooms.CityMapRoom;
+import com.episkipoe.hat.rooms.InventoryRoom;
+import com.episkipoe.hat.rooms.MagicLivingRoom;
 import com.episkipoe.hat.rooms.MagicRoom;
 import com.episkipoe.hat.rooms.Room;
+import com.episkipoe.hat.rooms.dominica.DominicaChristmasRoom;
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
@@ -22,7 +31,9 @@ import com.google.gwt.user.client.ui.RootPanel;
  * Entry point classes define <code>onModuleLoad()</code>.
  */
 public class Main implements EntryPoint {
+
 	static private Canvas canvas;
+	static private Context2d context;
 	private final CssColor redrawColor = CssColor.make("rgba(255,255,255,0.6)");
 	static private final int canvasWidth = 800;
 	static private final int canvasHeight = 600;
@@ -30,7 +41,7 @@ public class Main implements EntryPoint {
 	
 	static public ImageLibrary images;
 	static public Player player;
-	static public Room room;
+	static public InventoryImage inventory;
 	
 	/**
 	 * This is the entry point method.
@@ -41,6 +52,7 @@ public class Main implements EntryPoint {
               RootPanel.get().add(new Label("Sorry, your browser doesn't support the HTML5 Canvas element"));
               return;
         }
+		context = canvas.getContext2d();
         canvas.setStyleName("mainCanvas");
         canvas.setWidth(canvasWidth + "px");
         canvas.setCoordinateSpaceWidth(canvasWidth);
@@ -50,17 +62,22 @@ public class Main implements EntryPoint {
         
 		currentMousePos = new Point();
 		player = new Player();
-		player.setLocation(new Point(canvasWidth*0.5, canvasHeight*0.5));
 		loadImages();
         RootPanel.get().add(canvas);
-		switchRoom(new MagicRoom());
+        try {
+        	loadRooms();
+			if(!GameStorage.loadGame()) {
+			    GameStorage.newGame();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
         
         // setup timer
         final Timer timer = new Timer() {
           @Override
           public void run() {
         	  draw();
-        	  
           }
         };
         timer.scheduleRepeating(refreshRate);
@@ -84,20 +101,37 @@ public class Main implements EntryPoint {
 	 */
 	static private void loadImages() {
 		images = new ImageLibrary();
-		images.loadImage(player.getFilename());	
+		String imageList[] = { "TopHat.png", "Inventory.png", "door.png" };
+		images.loadImages(Arrays.asList(imageList));	
 	}
 
-	public static class StartGame implements Runnable {
-		@Override
-		public void run() {
-			setMouseMode(new MovePlayer());
-		}
-	}
-	
-	static public void switchRoom(Room newRoom) {
-		room = newRoom;
+	static public Room room;
+	static private Room previousRoom;
+	static public void switchRoom(Class <? extends Room> newRoom) throws Exception {
+		previousRoom = room;
+		room = getRoom(newRoom);
+		room.onEnter();
 		images.loadImages(room.getAllImages());
 	}
+	static public void goBack() throws Exception {
+		switchRoom(previousRoom.getClass());
+	}
+	
+	public static class SwitchRoom implements Runnable {
+		Class<? extends Room> destination;
+		public SwitchRoom(Class<? extends Room> destination) {
+			this.destination = destination;
+		}
+		@Override
+		public void run() {
+			try {
+				switchRoom(destination);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 	
 	/*
 	 * Draw
@@ -105,11 +139,13 @@ public class Main implements EntryPoint {
 	public void draw() {
 		if(player == null || room == null) return; 
 		
-		Context2d context = canvas.getContext2d();
 		context.setFillStyle(redrawColor);
 	    context.fillRect(0, 0, canvasWidth, canvasHeight);
 	    room.draw(context);
 		player.draw(context);
+		if (!(Main.room instanceof InventoryRoom)) {
+			inventory.draw(context);
+		}
 	}
 	
 	/*
@@ -118,6 +154,44 @@ public class Main implements EntryPoint {
 	
 	static private Point currentMousePos;
 	static public Point getCurrentPos() { return currentMousePos; }
+
+	public static Point getCenterPoint() {
+		return new Point(canvasWidth*0.5, canvasHeight*0.5);
+	}
+
+	public static void click(Point loc) throws Exception {
+		if(inventory.intersectsWith(loc) && !(Main.room instanceof InventoryRoom)) {
+			inventory.click();
+			return;
+		}
+		room.click(loc);
+	}
+
+	static private Map <Class<? extends Room>, Room> roomSet;
+	static public Map <Class<? extends Room>, Room> getRoomSet() {
+		if(roomSet==null) {
+			roomSet = new HashMap<Class<? extends Room>, Room> ();
+		}		
+		return roomSet;
+	}
+	static public Room getRoom(Class<? extends Room> room) throws Exception {
+		if(!getRoomSet().containsKey(room)) {
+			//Does not work:  getRoomSet().put(room, (Room) GWT.create(room));
+			return null;
+		}
+		return getRoomSet().get(room);
+	}
+	public void registerRoom(Class<? extends Room> roomClass, Room room) {
+		getRoomSet().put(roomClass, room);
+	}
+	
+	private void loadRooms() throws Exception {
+		registerRoom(InventoryRoom.class, new InventoryRoom());
+		registerRoom(MagicRoom.class, new MagicRoom());
+		registerRoom(MagicLivingRoom.class, new MagicLivingRoom());
+		registerRoom(CityMapRoom.class, new CityMapRoom());
+		registerRoom(DominicaChristmasRoom.class, new DominicaChristmasRoom());
+	}
 
 
 }

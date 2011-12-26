@@ -1,9 +1,8 @@
 package com.episkipoe.hat.player;
 
 import com.episkipoe.hat.client.Main;
-import com.episkipoe.hat.common.ImageDrawable;
-import com.episkipoe.hat.common.MouseMode;
 import com.episkipoe.hat.common.Point;
+import com.episkipoe.hat.common.interact.MouseMode;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.MouseMoveEvent;
@@ -15,8 +14,10 @@ public class MovePlayer extends MouseMode {
 			@Override
 			public void onMouseDown(MouseDownEvent event) {
 				Point loc = Main.getPointFromEvent(event);
-				for(ImageDrawable img : Main.room.getImagesAtPoint(loc)) {
-					img.click();
+				try {
+					Main.click(loc);
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
 			}
 		};	

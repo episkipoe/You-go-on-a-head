@@ -1,16 +1,16 @@
 package com.episkipoe.hat.characters;
 
-import com.episkipoe.hat.common.ImageDrawable;
+import com.episkipoe.hat.client.Main;
+import com.episkipoe.hat.common.draw.ImageDrawable;
 
 public class Magician extends ImageDrawable {
 
-	@Override
-	public String getFilename() {
-		return "StickMan.png";
+	public Magician() {
+		setFilename("StickMan.png");
 	}
 	
 	public void click() { 
-		say("Hey", 80);
+		Main.room.getDialog().add(say("Hey!", 80));
 	}
 
 }
