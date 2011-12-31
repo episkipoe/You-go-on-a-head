@@ -1,9 +1,11 @@
-package com.episkipoe.hat.rooms;
+package com.episkipoe.hat.rooms.magic;
 
 import com.episkipoe.hat.client.Main;
 import com.episkipoe.hat.common.Door;
 import com.episkipoe.hat.common.Point;
 import com.episkipoe.hat.common.interact.BackgroundClickable;
+import com.episkipoe.hat.rooms.Room;
+import com.episkipoe.hat.rooms.maps.CityMapRoom;
 
 public class MagicLivingRoom extends Room {
 	public MagicLivingRoom() throws Exception {

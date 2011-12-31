@@ -6,17 +6,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.episkipoe.hat.common.GameStorage;
-import com.episkipoe.hat.common.InventoryImage;
+import com.episkipoe.hat.common.Inventory;
 import com.episkipoe.hat.common.Point;
 import com.episkipoe.hat.common.draw.ImageLibrary;
 import com.episkipoe.hat.common.interact.MouseMode;
 import com.episkipoe.hat.player.Player;
-import com.episkipoe.hat.rooms.CityMapRoom;
 import com.episkipoe.hat.rooms.InventoryRoom;
-import com.episkipoe.hat.rooms.MagicLivingRoom;
-import com.episkipoe.hat.rooms.MagicRoom;
 import com.episkipoe.hat.rooms.Room;
-import com.episkipoe.hat.rooms.dominica.DominicaChristmasRoom;
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
@@ -41,7 +37,7 @@ public class Main implements EntryPoint {
 	
 	static public ImageLibrary images;
 	static public Player player;
-	static public InventoryImage inventory;
+	static public Inventory inventory;
 	
 	/**
 	 * This is the entry point method.
@@ -65,10 +61,7 @@ public class Main implements EntryPoint {
 		loadImages();
         RootPanel.get().add(canvas);
         try {
-        	loadRooms();
-			if(!GameStorage.loadGame()) {
-			    GameStorage.newGame();
-			}
+        	GameStorage.startup();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -82,7 +75,19 @@ public class Main implements EntryPoint {
         };
         timer.scheduleRepeating(refreshRate);
 	}
-	
+
+	/*
+	 * Setup
+	 */
+	static private void loadImages() {
+		images = new ImageLibrary();
+		String imageList[] = { "TopHat.png", "Inventory.png", "door.png" };
+		images.loadImages(Arrays.asList(imageList));	
+	}
+
+	/*
+	 * Events
+	 */
 	static public void setMouseMode(MouseMode newMode) {
 		if(newMode.mouseMoveHandler() != null) canvas.addMouseMoveHandler(newMode.mouseMoveHandler());
 		if(newMode.mouseUpHandler() != null) canvas.addMouseUpHandler(newMode.mouseUpHandler());
@@ -95,62 +100,6 @@ public class Main implements EntryPoint {
 	static public Point getPointFromEvent(MouseDownEvent event) {
 		return new Point(event.getRelativeX(canvas.getElement()), event.getRelativeY(canvas.getElement()));
 	}
-
-	/*
-	 * Setup
-	 */
-	static private void loadImages() {
-		images = new ImageLibrary();
-		String imageList[] = { "TopHat.png", "Inventory.png", "door.png" };
-		images.loadImages(Arrays.asList(imageList));	
-	}
-
-	static public Room room;
-	static private Room previousRoom;
-	static public void switchRoom(Class <? extends Room> newRoom) throws Exception {
-		previousRoom = room;
-		room = getRoom(newRoom);
-		room.onEnter();
-		images.loadImages(room.getAllImages());
-	}
-	static public void goBack() throws Exception {
-		switchRoom(previousRoom.getClass());
-	}
-	
-	public static class SwitchRoom implements Runnable {
-		Class<? extends Room> destination;
-		public SwitchRoom(Class<? extends Room> destination) {
-			this.destination = destination;
-		}
-		@Override
-		public void run() {
-			try {
-				switchRoom(destination);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
-	
-	/*
-	 * Draw
-	 */
-	public void draw() {
-		if(player == null || room == null) return; 
-		
-		context.setFillStyle(redrawColor);
-	    context.fillRect(0, 0, canvasWidth, canvasHeight);
-	    room.draw(context);
-		player.draw(context);
-		if (!(Main.room instanceof InventoryRoom)) {
-			inventory.draw(context);
-		}
-	}
-	
-	/*
-	 *   Input Events
-	 */
 	
 	static private Point currentMousePos;
 	static public Point getCurrentPos() { return currentMousePos; }
@@ -167,6 +116,38 @@ public class Main implements EntryPoint {
 		room.click(loc);
 	}
 
+
+	/*
+	 * Room management
+	 */
+	/**
+	 * The {@link Room} that the Player currently is in
+	 */
+	static public Room room;
+	/**
+	 * The room that the player was in before {@link #room}
+	 */
+	static private Room previousRoom;
+	/**
+	 * 
+	 * @param newRoom  becomes the new {@link #room}
+	 * @throws Exception
+	 */
+	static public void switchRoom(Class <? extends Room> newRoom) throws Exception {
+		previousRoom = room;
+		room = getRoom(newRoom);
+		room.onEnter();
+		images.loadImages(room.getAllImages());
+	}
+	
+	/**
+	 * switch to the {@link #previousRoom}
+	 * @throws Exception
+	 */
+	static public void goBack() throws Exception {
+		switchRoom(previousRoom.getClass());
+	}
+	
 	static private Map <Class<? extends Room>, Room> roomSet;
 	static public Map <Class<? extends Room>, Room> getRoomSet() {
 		if(roomSet==null) {
@@ -176,22 +157,48 @@ public class Main implements EntryPoint {
 	}
 	static public Room getRoom(Class<? extends Room> room) throws Exception {
 		if(!getRoomSet().containsKey(room)) {
-			//Does not work:  getRoomSet().put(room, (Room) GWT.create(room));
+			//Reflection does not work on server, i.e.:  getRoomSet().put(room, (Room) GWT.create(room));
+			//rooms must be registered in advance
 			return null;
 		}
 		return getRoomSet().get(room);
 	}
-	public void registerRoom(Class<? extends Room> roomClass, Room room) {
+	static public void registerRoom(Class<? extends Room> roomClass, Room room) {
 		getRoomSet().put(roomClass, room);
 	}
 	
-	private void loadRooms() throws Exception {
-		registerRoom(InventoryRoom.class, new InventoryRoom());
-		registerRoom(MagicRoom.class, new MagicRoom());
-		registerRoom(MagicLivingRoom.class, new MagicLivingRoom());
-		registerRoom(CityMapRoom.class, new CityMapRoom());
-		registerRoom(DominicaChristmasRoom.class, new DominicaChristmasRoom());
+	/**
+	 *  A Runnable for {@link Main#switchRoom}
+	 *
+	 */
+	public static class SwitchRoom implements Runnable {
+		Class<? extends Room> destination;
+		public SwitchRoom(Class<? extends Room> destination) {
+			this.destination = destination;
+		}
+		@Override
+		public void run() {
+			try {
+				switchRoom(destination);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
-
+	
+	/*
+	 * Draw
+	 */
+	public void draw() {
+		if(player == null || room == null) return; 
+		
+		context.setFillStyle(redrawColor);
+	    context.fillRect(0, 0, canvasWidth, canvasHeight);
+	    room.draw(context);
+		player.draw(context);
+		if (!(Main.room instanceof InventoryRoom)) {
+			inventory.draw(context);
+		}
+	}
 
 }

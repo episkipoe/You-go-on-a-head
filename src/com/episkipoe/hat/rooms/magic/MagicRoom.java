@@ -1,4 +1,4 @@
-package com.episkipoe.hat.rooms;
+package com.episkipoe.hat.rooms.magic;
 
 import java.util.Arrays;
 import java.util.List;
@@ -10,6 +10,7 @@ import com.episkipoe.hat.common.GameStorage;
 import com.episkipoe.hat.common.Point;
 import com.episkipoe.hat.common.dialog.DialogElement;
 import com.episkipoe.hat.player.MovePlayer;
+import com.episkipoe.hat.rooms.Room;
 
 
 public class MagicRoom extends Room {
