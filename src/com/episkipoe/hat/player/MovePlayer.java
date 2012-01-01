@@ -26,7 +26,13 @@ public class MovePlayer extends MouseMode {
 		return new MouseMoveHandler() { 
 			@Override
 			public void onMouseMove(MouseMoveEvent event) {
-				Main.player.setLocation(Main.getPointFromEvent(event));
+				Point point = Main.getPointFromEvent(event);
+				Main.player.setLocation(point);
+				if(Main.pointIsClickable(point)) {
+					Main.player.setAlpha(0.1);
+				} else {
+					Main.player.setAlpha(1.0);
+				}
 			}
 		};	
 	}

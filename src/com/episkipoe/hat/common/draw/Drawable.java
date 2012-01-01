@@ -1,6 +1,5 @@
 package com.episkipoe.hat.common.draw;
 
-import com.episkipoe.hat.common.Point;
 import com.google.gwt.canvas.dom.client.Context2d;
 
 /**
@@ -8,5 +7,4 @@ import com.google.gwt.canvas.dom.client.Context2d;
  */
 public interface Drawable {
 	public void draw(Context2d context);
-	public Point getLocation();
 }

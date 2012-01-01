@@ -1,6 +1,7 @@
 package com.episkipoe.hat.rooms;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import com.episkipoe.hat.client.Main;
@@ -21,7 +22,7 @@ public abstract class Room {
 	 * 	this list may, but does not need to, include the background image 
 	 *  or images associated with {@link Drawable}s loaded in the constructor
 	 */
-	public List<String> getRequiredImages() { return new ArrayList<String>(); }
+	public Collection<String> getRequiredImages() { return new ArrayList<String>(); }
 	
 	/**
 	 * 
@@ -85,7 +86,17 @@ public abstract class Room {
 	public final void draw(Context2d context) {
 		if(getBackground() != null) ImageUtils.draw(context, getBackground());
 		preDraw(context);
-		for(Drawable d: getDrawables()) d.draw(context);
+		List<Drawable> itemsToPrune=new ArrayList<Drawable>();
+		for(Drawable d: getDrawables()) {
+			d.draw(context);
+			if(d instanceof Dialog) {
+				Dialog dialog = (Dialog) d;
+				if(dialog.isEmpty()) {
+					itemsToPrune.add(d);
+				}
+			}
+		}
+		getDrawables().removeAll(itemsToPrune);
 		postDraw(context);
 		getDialog().draw(context);
 	}
@@ -107,7 +118,20 @@ public abstract class Room {
 		}
 	}
 	
-	public final List<String> getAllImages() {
+	public final boolean pointIsClickable(Point point) {
+		for(Drawable d: getDrawables()) {
+			if(d instanceof Clickable) {
+				Clickable target = (Clickable)d;
+				if(target.intersectsWith(point)) return true;
+			}
+		}
+		for(Clickable c: getClickables()) {
+			if(c.intersectsWith(point)) return true;
+		}		
+		return false;
+	}
+	
+	public final Collection<String> getAllImages() {
 		List<String> images = new ArrayList<String>();
 		if(getBackground() != null) images.add(getBackground());
 		
@@ -118,7 +142,7 @@ public abstract class Room {
 			}
 		}
 		
-		List<String> required = getRequiredImages();
+		Collection<String> required = getRequiredImages();
 		if(required != null) images.addAll(required);
 		
 		return images;
@@ -129,4 +153,6 @@ public abstract class Room {
 		}
 		onLoad();
 	}
+
+
 }

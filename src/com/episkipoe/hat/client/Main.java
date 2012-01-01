@@ -29,10 +29,10 @@ import com.google.gwt.user.client.ui.RootPanel;
 public class Main implements EntryPoint {
 
 	static private Canvas canvas;
-	static private Context2d context;
+	static public Context2d context;
 	private final CssColor redrawColor = CssColor.make("rgba(255,255,255,0.6)");
-	static private final int canvasWidth = 800;
-	static private final int canvasHeight = 600;
+	static public final int canvasWidth = 800;
+	static public final int canvasHeight = 600;
 	static private final int refreshRate = 50;
 	
 	static public ImageLibrary images;
@@ -81,8 +81,7 @@ public class Main implements EntryPoint {
 	 */
 	static private void loadImages() {
 		images = new ImageLibrary();
-		String imageList[] = { "TopHat.png", "Inventory.png", "door.png" };
-		images.loadImages(Arrays.asList(imageList));	
+		images.loadImages(Arrays.asList(GameStorage.getCommonImages()));	
 	}
 
 	/*
@@ -108,12 +107,25 @@ public class Main implements EntryPoint {
 		return new Point(canvasWidth*0.5, canvasHeight*0.5);
 	}
 
-	public static void click(Point loc) throws Exception {
-		if(inventory.intersectsWith(loc) && !(Main.room instanceof InventoryRoom)) {
+	public static void click(Point point) throws Exception {
+		//The Inventory button is drawn at the top-left of the screen (except in the InventoryRoom)
+		if(inventory.intersectsWith(point) && !(Main.room instanceof InventoryRoom)) {
 			inventory.click();
 			return;
 		}
-		room.click(loc);
+		room.click(point);
+	}
+
+	/**
+	 * 
+	 * @param point
+	 * @return true if clicking at this point will cause something to happen
+	 */
+	public static boolean pointIsClickable(Point point) {
+		if(inventory.intersectsWith(point) && !(Main.room instanceof InventoryRoom)) {
+			return true;
+		}
+		return room.pointIsClickable(point);
 	}
 
 

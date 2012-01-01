@@ -21,7 +21,7 @@ public class MagicRoom extends Room {
 		magician.setLocation(new Point(400, 450));
 		addDrawable(magician);
 	
-		addDrawable(new Door(new Point(600, 500), MagicLivingRoom.class));
+		addDrawable(new Door(new Point(600, 500), MagicLivingRoom.class, "RightArrow.png"));
 	}
 
 	public List<String> getRequiredImages() { 

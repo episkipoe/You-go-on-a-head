@@ -1,8 +1,13 @@
 package com.episkipoe.hat.rooms.magic;
 
+import java.util.Arrays;
+import java.util.List;
+
 import com.episkipoe.hat.client.Main;
 import com.episkipoe.hat.common.Door;
 import com.episkipoe.hat.common.Point;
+import com.episkipoe.hat.common.dialog.Dialog;
+import com.episkipoe.hat.common.dialog.DialogElement;
 import com.episkipoe.hat.common.interact.BackgroundClickable;
 import com.episkipoe.hat.rooms.Room;
 import com.episkipoe.hat.rooms.maps.CityMapRoom;
@@ -10,12 +15,51 @@ import com.episkipoe.hat.rooms.maps.CityMapRoom;
 public class MagicLivingRoom extends Room {
 	public MagicLivingRoom() throws Exception {
 		setBackground("MagicHouse-LivingRoom.png");
-		BackgroundClickable exit = new BackgroundClickable(new Point(83,83), new Point(193, 255));
+		BackgroundClickable exit = new BackgroundClickable(new Point(83,200), new Point(193, 400));
 		exit.setAction(new Main.SwitchRoom(CityMapRoom.class));
-		addClickable(exit);
+		addDrawable(exit);
 
-		addDrawable(new Door(new Point(60, 500), MagicRoom.class));
+		addDrawable(new Door(new Point(60, 500), MagicRoom.class, "LeftArrow.png"));
+		addDrawable(new Door(new Point(630, 500), MagicKitchen.class, "RightArrow.png"));
+		
+		BackgroundClickable penguin = new BackgroundClickable(new Point(428,495), new Point(460, 540)); 
+		penguin.setAction(new ClickPenguin());
+		addDrawable(penguin);
+		
+		BackgroundClickable pirate = new BackgroundClickable(new Point(720,372), new Point(768, 411)); 
+		pirate.setAction(new ClickPirateMonkey());
+		addDrawable(pirate);
+		
+		BackgroundClickable gnome = new BackgroundClickable(new Point(287, 311), new Point(322, 371));
+		gnome.setAction(new ClickGnome());
+		addDrawable(gnome);
+	}
+	
+	public List<String> getRequiredImages() { 
+		return Arrays.asList("PirateHat.png"); 
 	}
 
+	
+	private class ClickPenguin implements Runnable {
+		@Override
+		public void run() {
+			addDrawable(new Dialog(new DialogElement("Ice to meet you", new Point(460,495), 40)));
+		}
+	}
+	
+	private class ClickPirateMonkey implements Runnable {
+		@Override
+		public void run() {
+			addDrawable(new Dialog(new DialogElement("Hey buddy, let's go plunderin'", new Point(620,337), 80)));
+			Main.inventory.pickup("PirateHat.png", "hats");
+		}
+	}
+	
+	private class ClickGnome implements Runnable {
+		@Override
+		public void run() {	
+			addDrawable(new Dialog(new DialogElement("Me?  I'm gnome-body special", new Point(330,323), 40)));
+		}
+	}
 
 }

@@ -7,11 +7,12 @@ import com.episkipoe.hat.client.Main;
 import com.episkipoe.hat.common.Point;
 import com.episkipoe.hat.common.dialog.Dialog;
 import com.episkipoe.hat.common.dialog.DialogElement;
+import com.episkipoe.hat.common.dialog.Speaker;
 import com.episkipoe.hat.common.interact.Clickable;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.dom.client.ImageElement;
 
-public abstract class ImageDrawable implements Drawable, Clickable {
+public abstract class ImageDrawable implements Drawable, Clickable, Speaker {
 	public ImageDrawable() { }
 	
 	/*
@@ -34,13 +35,20 @@ public abstract class ImageDrawable implements Drawable, Clickable {
 		return location;
 	}
 	public final void setLocation(Point location) { this.location = location; }
+	
+	private double alpha=1.0;
+	public final void setAlpha(double alpha) {
+		this.alpha = alpha;
+	}
 
 	public final ImageElement getImageElement() { 
 		return Main.images.getImage(getFilename());	
 	}
 	
 	public final void draw(Context2d context) {
+		if(alpha<1.0) context.setGlobalAlpha(alpha);
 		ImageUtils.draw(context, getFilename(), getLocation());
+		if(alpha<1.0) context.setGlobalAlpha(1.0);
 	}	
 
 	public final boolean intersectsWith(Point point) {
@@ -58,12 +66,10 @@ public abstract class ImageDrawable implements Drawable, Clickable {
 	}
 	
 	public final DialogElement say(String message) {
-		return say(message, Dialog.DEFAULT_DURATION);
+		return say(Arrays.asList(message), Dialog.DEFAULT_DURATION);
 	}
 	
-	public final DialogElement say(String message, int duration) {
-		return say(Arrays.asList(message), duration);
-	}
+	@Override
 	public final DialogElement say(List<String> message, int duration) {
 		ImageElement img = getImageElement();
 		if(img==null) {

@@ -1,8 +1,10 @@
 package com.episkipoe.hat.common.interact;
 
 import com.episkipoe.hat.common.Point;
+import com.episkipoe.hat.common.draw.Drawable;
+import com.google.gwt.canvas.dom.client.Context2d;
 
-public class BackgroundClickable implements Clickable {
+public class BackgroundClickable implements Clickable, Drawable {
 	float x1, x2, y1, y2;
 	public BackgroundClickable(Point first, Point second) {
 		x1 = (first.x < second.x ? first.x : second.x);
@@ -36,5 +38,12 @@ public class BackgroundClickable implements Clickable {
 	public void click() {
 		action.run();
 	}
+
+	@Override
+	public void draw(Context2d context) {
+		context.setStrokeStyle("rgba(255,255,255,0.75)");
+		context.strokeRect(x1, y1, x2-x1, y2-y1);
+	}
+
 
 }

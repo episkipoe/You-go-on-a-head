@@ -4,9 +4,12 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import com.episkipoe.hat.client.Main;
+import com.episkipoe.hat.common.dialog.Dialog;
+import com.episkipoe.hat.common.dialog.DialogElement;
 import com.episkipoe.hat.common.draw.ImageDrawable;
 import com.episkipoe.hat.rooms.InventoryRoom;
 import com.episkipoe.hat.rooms.Room;
@@ -16,8 +19,6 @@ public class Inventory extends ImageDrawable {
 		categoryToItems = new HashMap<String, Set<String> > ();
 		setLocation(new Point(50,50));
 		setFilename("Inventory.png");
-
-		addItem("TopHat.png", "hats");
 	}
 
 	Room previousRoom;
@@ -26,11 +27,6 @@ public class Inventory extends ImageDrawable {
 		Main.switchRoom(InventoryRoom.class);
 	}
 
-	public static String[] getCategories() {
-		String[] categories = { "Bills", "Heads", "Tricks", "Misc" };
-		return categories;
-	}
-	
 	private Map<String, Set<String> > categoryToItems;
 	public void addItem(String filename, String category) {
 		Set<String> itemList = categoryToItems.get(category);
@@ -44,9 +40,7 @@ public class Inventory extends ImageDrawable {
 	public Collection<String> getItemsOfCategory(String category) {
 		return categoryToItems.get(category);
 	}
-	public Collection<String> getHats() {
-		return getItemsOfCategory("hats");
-	}
+
 	public static class Buy implements Runnable {
 		String fileName;
 		String category;
@@ -66,9 +60,24 @@ public class Inventory extends ImageDrawable {
 			GameStorage.saveGame();
 		}			
 	}
+	
+	public void pickup(String fileName, String category) {
+		if(category.equals("hats")) {
+			Main.player.setFilename(fileName);
+		}
+		Main.inventory.addItem(fileName, category);
+		GameStorage.saveGame();		
+	}
+	
 	public static class Pickup implements Runnable {
-		String fileName;
-		String category;
+		private String fileName;
+		private String category;
+		private String message;
+		public Pickup (String fileName, String category, String message) {
+			this.fileName = fileName;
+			this.category = category;	
+			this.message = message;
+		}
 		public Pickup (String fileName, String category) {
 			this.fileName = fileName;
 			this.category = category;	
@@ -77,12 +86,14 @@ public class Inventory extends ImageDrawable {
 			this.fileName = object.getFilename();
 			this.category = category;
 		}	
+		public void setMessage(String message) {
+			this.message = message;
+		}
 		public void run() {
-			if(category.equals("hats")) {
-				Main.player.setFilename(fileName);
+			Main.inventory.pickup(fileName, category);
+			if(message != null) {
+				Main.room.addDrawable(new Dialog(new DialogElement(message, Main.getCenterPoint())));
 			}
-			Main.inventory.addItem(fileName, category);
-			GameStorage.saveGame();
 		}	
 	}
 
@@ -98,10 +109,7 @@ public class Inventory extends ImageDrawable {
 	public String toString() {
 		if(categoryToItems == null) return null;
 		String inventoryString="";
-		for(String item: getHats()) {
-			inventoryString += "hats"+"_"+item+"_";
-		}
-		for(String category: getCategories()) {
+		for(String category: GameStorage.getCategories()) {
 			Collection<String> itemList = getItemsOfCategory(category);
 			if(itemList == null) continue;
 			for(String item: itemList) {
@@ -109,6 +117,22 @@ public class Inventory extends ImageDrawable {
 			}
 		}
 		return inventoryString;
+	}
+
+	public Collection<String> getAllItems() {
+		Set<String> items = new HashSet<String>();
+		for (Entry<String, Set<String>> entry : categoryToItems.entrySet()) {
+			if(entry.getValue() == null || entry.getValue().isEmpty()) continue;		
+			items.addAll(entry.getValue());
+		}
+		return items;
+	}
+	public boolean contains(String item) {
+		for (Entry<String, Set<String>> entry : categoryToItems.entrySet()) {
+			if(entry.getValue() == null || entry.getValue().isEmpty()) continue;
+			if(entry.getValue().contains(item)) return true;
+		}
+		return false;
 	}
 	
 }

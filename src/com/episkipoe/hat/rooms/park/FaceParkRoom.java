@@ -10,5 +10,6 @@ public class FaceParkRoom extends Room {
 		setBackground("FacePark.png");
 		
 		addDrawable(new Door(new Point(560, 500), CityMapRoom.class));
+		
 	}
 }
