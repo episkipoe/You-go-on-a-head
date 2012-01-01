@@ -6,17 +6,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.episkipoe.hat.common.GameStorage;
-import com.episkipoe.hat.common.Inventory;
 import com.episkipoe.hat.common.Point;
 import com.episkipoe.hat.common.draw.ImageLibrary;
 import com.episkipoe.hat.common.interact.MouseMode;
+import com.episkipoe.hat.common.inventory.Inventory;
+import com.episkipoe.hat.common.inventory.InventoryRoom;
 import com.episkipoe.hat.player.Player;
-import com.episkipoe.hat.rooms.InventoryRoom;
 import com.episkipoe.hat.rooms.Room;
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseMoveEvent;
 import com.google.gwt.user.client.Timer;
@@ -55,6 +57,8 @@ public class Main implements EntryPoint {
  
         canvas.setHeight(canvasHeight + "px");
         canvas.setCoordinateSpaceHeight(canvasHeight);
+        
+        canvas.addKeyPressHandler(keyPressHandler());
         
 		currentMousePos = new Point();
 		player = new Player();
@@ -139,7 +143,7 @@ public class Main implements EntryPoint {
 	/**
 	 * The room that the player was in before {@link #room}
 	 */
-	static private Room previousRoom;
+	public static Room previousRoom;
 	/**
 	 * 
 	 * @param newRoom  becomes the new {@link #room}
@@ -148,6 +152,9 @@ public class Main implements EntryPoint {
 	static public void switchRoom(Class <? extends Room> newRoom) throws Exception {
 		previousRoom = room;
 		room = getRoom(newRoom);
+		if(room==null) {
+			System.out.println("Room " + newRoom + " could not be loaded");
+		}
 		room.onEnter();
 		images.loadImages(room.getAllImages());
 	}
@@ -175,27 +182,9 @@ public class Main implements EntryPoint {
 		}
 		return getRoomSet().get(room);
 	}
+	
 	static public void registerRoom(Class<? extends Room> roomClass, Room room) {
 		getRoomSet().put(roomClass, room);
-	}
-	
-	/**
-	 *  A Runnable for {@link Main#switchRoom}
-	 *
-	 */
-	public static class SwitchRoom implements Runnable {
-		Class<? extends Room> destination;
-		public SwitchRoom(Class<? extends Room> destination) {
-			this.destination = destination;
-		}
-		@Override
-		public void run() {
-			try {
-				switchRoom(destination);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
 	}
 	
 	/*
@@ -207,10 +196,25 @@ public class Main implements EntryPoint {
 		context.setFillStyle(redrawColor);
 	    context.fillRect(0, 0, canvasWidth, canvasHeight);
 	    room.draw(context);
-		player.draw(context);
 		if (!(Main.room instanceof InventoryRoom)) {
 			inventory.draw(context);
 		}
+		player.draw(context);
+	}
+	
+	private KeyPressHandler keyPressHandler() {
+		return new KeyPressHandler() {
+			@Override
+			public void onKeyPress(KeyPressEvent event) {
+				if(event.getCharCode() == 'b') { 
+					try {
+						Main.goBack();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}				
+				} 
+			}
+		};
 	}
 
 }

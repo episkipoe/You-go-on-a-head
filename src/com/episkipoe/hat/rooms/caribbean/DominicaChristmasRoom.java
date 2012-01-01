@@ -4,9 +4,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.episkipoe.hat.common.Door;
-import com.episkipoe.hat.common.Inventory;
 import com.episkipoe.hat.common.Point;
 import com.episkipoe.hat.common.interact.BackgroundClickable;
+import com.episkipoe.hat.common.inventory.Hats;
+import com.episkipoe.hat.common.inventory.Inventory;
 import com.episkipoe.hat.rooms.Room;
 
 public class DominicaChristmasRoom extends Room {
@@ -14,7 +15,7 @@ public class DominicaChristmasRoom extends Room {
 		setBackground("Dominica-Christmas.png");
 		
 		BackgroundClickable hat = new BackgroundClickable(new Point(336,300), new Point(400,372));
-		hat.setAction(new Inventory.Pickup("SantaHat.png", "hats"));
+		hat.setAction(new Inventory.Pickup("SantaHat.png", new Hats()));
 		addDrawable(hat);
 		
 		addDrawable(new Door(new Point(560, 500), DominicaRoom.class));

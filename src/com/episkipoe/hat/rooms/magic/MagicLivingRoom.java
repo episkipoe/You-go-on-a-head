@@ -9,14 +9,16 @@ import com.episkipoe.hat.common.Point;
 import com.episkipoe.hat.common.dialog.Dialog;
 import com.episkipoe.hat.common.dialog.DialogElement;
 import com.episkipoe.hat.common.interact.BackgroundClickable;
+import com.episkipoe.hat.common.inventory.Hats;
 import com.episkipoe.hat.rooms.Room;
+import com.episkipoe.hat.rooms.SwitchRoom;
 import com.episkipoe.hat.rooms.maps.CityMapRoom;
 
 public class MagicLivingRoom extends Room {
 	public MagicLivingRoom() throws Exception {
 		setBackground("MagicHouse-LivingRoom.png");
 		BackgroundClickable exit = new BackgroundClickable(new Point(83,200), new Point(193, 400));
-		exit.setAction(new Main.SwitchRoom(CityMapRoom.class));
+		exit.setAction(new SwitchRoom(CityMapRoom.class));
 		addDrawable(exit);
 
 		addDrawable(new Door(new Point(60, 500), MagicRoom.class, "LeftArrow.png"));
@@ -51,7 +53,7 @@ public class MagicLivingRoom extends Room {
 		@Override
 		public void run() {
 			addDrawable(new Dialog(new DialogElement("Hey buddy, let's go plunderin'", new Point(620,337), 80)));
-			Main.inventory.pickup("PirateHat.png", "hats");
+			Main.inventory.pickup("PirateHat.png", new Hats());
 		}
 	}
 	

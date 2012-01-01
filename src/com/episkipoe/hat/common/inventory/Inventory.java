@@ -1,5 +1,6 @@
-package com.episkipoe.hat.common;
+package com.episkipoe.hat.common.inventory;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -8,15 +9,18 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import com.episkipoe.hat.client.Main;
+import com.episkipoe.hat.common.GameStorage;
+import com.episkipoe.hat.common.Point;
 import com.episkipoe.hat.common.dialog.Dialog;
 import com.episkipoe.hat.common.dialog.DialogElement;
 import com.episkipoe.hat.common.draw.ImageDrawable;
-import com.episkipoe.hat.rooms.InventoryRoom;
 import com.episkipoe.hat.rooms.Room;
+import com.google.gwt.dom.client.ImageElement;
 
 public class Inventory extends ImageDrawable {
+	private Map<InventoryCategory, Set<String> > categoryToItems;
 	public Inventory() { 
-		categoryToItems = new HashMap<String, Set<String> > ();
+		categoryToItems = new HashMap<InventoryCategory, Set<String> > ();
 		setLocation(new Point(50,50));
 		setFilename("Inventory.png");
 	}
@@ -27,8 +31,7 @@ public class Inventory extends ImageDrawable {
 		Main.switchRoom(InventoryRoom.class);
 	}
 
-	private Map<String, Set<String> > categoryToItems;
-	public void addItem(String filename, String category) {
+	public void addItem(String filename, InventoryCategory category) {
 		Set<String> itemList = categoryToItems.get(category);
 		if(itemList==null) {
 			itemList = new HashSet<String>();
@@ -37,52 +40,34 @@ public class Inventory extends ImageDrawable {
 		itemList.add(filename);
 	}
 	
-	public Collection<String> getItemsOfCategory(String category) {
+	public Collection<String> getItemsOfCategory(InventoryCategory category) {
 		return categoryToItems.get(category);
 	}
-
-	public static class Buy implements Runnable {
-		String fileName;
-		String category;
-		int price;
-		public Buy (String fileName, String category, int price) {
-			this.fileName = fileName;
-			this.category = category;	
-			this.price = price;
-		}
-
-		public void run() {
-			if(Main.player.getMoney() < price ) {
-				return;
-			}
-			Main.player.spendMoney(price);
-			Main.inventory.addItem(fileName, category);
-			GameStorage.saveGame();
-		}			
-	}
 	
-	public void pickup(String fileName, String category) {
-		if(category.equals("hats")) {
-			Main.player.setFilename(fileName);
-		}
+	public void pickup(String fileName, InventoryCategory category) {
 		Main.inventory.addItem(fileName, category);
+		String msg = "New " + category.getName();
+		ImageElement img = getImageElement();
+		Point location = new Point(5, img.getHeight()+5);
+		Main.room.addDrawable(new DialogElement(msg, location, 30));
+		category.playerPickedUp(fileName);
 		GameStorage.saveGame();		
 	}
 	
 	public static class Pickup implements Runnable {
 		private String fileName;
-		private String category;
+		private InventoryCategory category;
 		private String message;
-		public Pickup (String fileName, String category, String message) {
+		public Pickup (String fileName, InventoryCategory category, String message) {
 			this.fileName = fileName;
 			this.category = category;	
 			this.message = message;
 		}
-		public Pickup (String fileName, String category) {
+		public Pickup (String fileName, InventoryCategory category) {
 			this.fileName = fileName;
 			this.category = category;	
 		}
-		public Pickup (ImageDrawable object, String category) {
+		public Pickup (ImageDrawable object, InventoryCategory category) {
 			this.fileName = object.getFilename();
 			this.category = category;
 		}	
@@ -92,7 +77,7 @@ public class Inventory extends ImageDrawable {
 		public void run() {
 			Main.inventory.pickup(fileName, category);
 			if(message != null) {
-				Main.room.addDrawable(new Dialog(new DialogElement(message, Main.getCenterPoint())));
+				Main.room.addDrawable(new Dialog(new DialogElement(Arrays.asList(message), Main.getCenterPoint())));
 			}
 		}	
 	}
@@ -102,18 +87,20 @@ public class Inventory extends ImageDrawable {
 		String[] stringList = inventory.split("_");
 		if(stringList.length < 2) return;
 		for(int i = 0 ; i < stringList.length ; i+=2) {
-			addItem(stringList[i+1], stringList[i]);
+			String fileName = stringList[i+1];
+			InventoryCategory category = InventoryCategoryFactory.nameToCategory(stringList[i]);
+			addItem(fileName, category);
 		}
 	}
 	
 	public String toString() {
 		if(categoryToItems == null) return null;
 		String inventoryString="";
-		for(String category: GameStorage.getCategories()) {
+		for(InventoryCategory category: InventoryCategoryFactory.getCategories()) {
 			Collection<String> itemList = getItemsOfCategory(category);
 			if(itemList == null) continue;
 			for(String item: itemList) {
-				inventoryString += category+"_"+item+"_";
+				inventoryString += category.getName()+"_"+item+"_";
 			}
 		}
 		return inventoryString;
@@ -121,14 +108,14 @@ public class Inventory extends ImageDrawable {
 
 	public Collection<String> getAllItems() {
 		Set<String> items = new HashSet<String>();
-		for (Entry<String, Set<String>> entry : categoryToItems.entrySet()) {
+		for (Entry<InventoryCategory, Set<String>> entry : categoryToItems.entrySet()) {
 			if(entry.getValue() == null || entry.getValue().isEmpty()) continue;		
 			items.addAll(entry.getValue());
 		}
 		return items;
 	}
 	public boolean contains(String item) {
-		for (Entry<String, Set<String>> entry : categoryToItems.entrySet()) {
+		for (Entry<InventoryCategory, Set<String>> entry : categoryToItems.entrySet()) {
 			if(entry.getValue() == null || entry.getValue().isEmpty()) continue;
 			if(entry.getValue().contains(item)) return true;
 		}

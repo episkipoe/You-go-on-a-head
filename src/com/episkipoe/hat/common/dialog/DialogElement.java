@@ -1,7 +1,7 @@
 package com.episkipoe.hat.common.dialog;
 
 import java.util.Arrays;
-import java.util.List;
+import java.util.Collection;
 
 import com.episkipoe.hat.common.Point;
 import com.episkipoe.hat.common.draw.Drawable;
@@ -9,12 +9,12 @@ import com.episkipoe.hat.common.draw.TextUtils;
 import com.google.gwt.canvas.dom.client.Context2d;
 
 public class DialogElement implements Drawable {
-	private List<String> message;
+	private Collection<String> message;
 	private Point location; 
 	private int duration;
 	Runnable postAction;
 	
-	public DialogElement(List<String> message, Point location, int duration) {
+	public DialogElement(Collection<String> message, Point location, int duration) {
 		this.message=message;
 		this.location=location; 
 		this.duration=duration;	
@@ -24,8 +24,8 @@ public class DialogElement implements Drawable {
 		this.location=location; 
 		this.duration=duration;	
 	}
-	public DialogElement(String message, Point location) {
-		this.message=Arrays.asList(message);
+	public DialogElement(Collection<String> msg, Point location) {
+		this.message=msg;
 		this.location=location; 
 		this.duration=-1;	
 	}
@@ -34,7 +34,7 @@ public class DialogElement implements Drawable {
 		this.postAction = postAction;
 	}
 	
-	boolean expired() {
+	public boolean expired() {
 		return duration==0;
 	}
 

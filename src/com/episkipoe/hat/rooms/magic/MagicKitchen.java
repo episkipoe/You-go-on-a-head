@@ -9,6 +9,7 @@ import com.episkipoe.hat.common.Point;
 import com.episkipoe.hat.common.dialog.Dialog;
 import com.episkipoe.hat.common.dialog.DialogElement;
 import com.episkipoe.hat.common.interact.BackgroundClickable;
+import com.episkipoe.hat.common.inventory.Collectables;
 import com.episkipoe.hat.rooms.Room;
 
 public class MagicKitchen extends Room {
@@ -37,9 +38,11 @@ public class MagicKitchen extends Room {
 	private class PickupBeer implements Runnable {
 		@Override
 		public void run() {
-			Main.inventory.pickup("MagicHatBeer.png", "Misc");
-			Main.room.addDrawable(new Dialog(new DialogElement("Now I've got a nice six-pack", Main.getCenterPoint())));
-			Main.room.setBackground("Kitchen.png");
+			clearDrawables();
+			addDrawable(new Door(new Point(60, 500), MagicLivingRoom.class, "LeftArrow.png"));
+			setBackground("Kitchen.png");
+			Main.inventory.pickup("MagicHatBeer.png", new Collectables());
+			Main.room.addDrawable(new Dialog(new DialogElement(Arrays.asList("Now I've got a nice six-pack"), Main.getCenterPoint(), 50)));
 		}
 	}
 

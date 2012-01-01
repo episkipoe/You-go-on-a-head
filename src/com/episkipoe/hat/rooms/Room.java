@@ -7,6 +7,7 @@ import java.util.List;
 import com.episkipoe.hat.client.Main;
 import com.episkipoe.hat.common.Point;
 import com.episkipoe.hat.common.dialog.Dialog;
+import com.episkipoe.hat.common.dialog.DialogElement;
 import com.episkipoe.hat.common.draw.Drawable;
 import com.episkipoe.hat.common.draw.ImageDrawable;
 import com.episkipoe.hat.common.draw.ImageUtils;
@@ -83,18 +84,28 @@ public abstract class Room {
 		if(dialog == null) dialog = new Dialog();
 		return dialog;
 	}
+	
+	private final boolean itemExpired(Drawable d) {
+		if(d instanceof DialogElement) {
+			DialogElement dialog = (DialogElement) d;
+			return dialog.expired();
+		}
+		if(d instanceof Dialog) {
+			Dialog dialog = (Dialog) d;
+			return dialog.isEmpty();
+		}		
+		return false;
+	}
 	public final void draw(Context2d context) {
 		if(getBackground() != null) ImageUtils.draw(context, getBackground());
 		preDraw(context);
 		List<Drawable> itemsToPrune=new ArrayList<Drawable>();
 		for(Drawable d: getDrawables()) {
 			d.draw(context);
-			if(d instanceof Dialog) {
-				Dialog dialog = (Dialog) d;
-				if(dialog.isEmpty()) {
-					itemsToPrune.add(d);
-				}
+			if(itemExpired(d)) {
+				itemsToPrune.add(d);
 			}
+
 		}
 		getDrawables().removeAll(itemsToPrune);
 		postDraw(context);

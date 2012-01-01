@@ -1,13 +1,18 @@
 package com.episkipoe.hat.common;
 
 import com.episkipoe.hat.client.Main;
+import com.episkipoe.hat.common.inventory.Hats;
+import com.episkipoe.hat.common.inventory.Inventory;
+import com.episkipoe.hat.common.inventory.InventoryRoom;
 import com.episkipoe.hat.player.MovePlayer;
-import com.episkipoe.hat.rooms.InventoryRoom;
 import com.episkipoe.hat.rooms.caribbean.*;
 import com.episkipoe.hat.rooms.magic.*;
 import com.episkipoe.hat.rooms.maps.CityMapRoom;
 import com.episkipoe.hat.rooms.maps.NorthAmericaRoom;
+import com.episkipoe.hat.rooms.northpole.BlueTreeRoom;
+import com.episkipoe.hat.rooms.northpole.NorthPole;
 import com.episkipoe.hat.rooms.park.FaceParkRoom;
+import com.episkipoe.hat.rooms.party.PartyStore;
 import com.episkipoe.hat.rooms.party.RioRoom;
 import com.google.gwt.storage.client.Storage;
 
@@ -48,7 +53,7 @@ public class GameStorage {
 	
 	static public void newGame() throws Exception {
 		Main.inventory = new Inventory();
-		Main.inventory.addItem("TopHat.png", "hats");
+		Main.inventory.addItem("TopHat.png", new Hats());
 		Main.switchRoom(MagicRoom.class);
 	}
 	
@@ -63,6 +68,7 @@ public class GameStorage {
 		Main.registerRoom(MagicKitchen.class, new MagicKitchen());
 		Main.registerRoom(MagicLivingRoom.class, new MagicLivingRoom());
 		//party
+		Main.registerRoom(PartyStore.class, new PartyStore());
 		Main.registerRoom(RioRoom.class, new RioRoom());
 		//Caribbean
 		Main.registerRoom(CaribbeanRoom.class, new CaribbeanRoom());
@@ -77,6 +83,10 @@ public class GameStorage {
 		Main.registerRoom(Underwater.class, new Underwater());
 		//Park
 		Main.registerRoom(FaceParkRoom.class, new FaceParkRoom());
+		//North Pole
+		Main.registerRoom(NorthPole.class, new NorthPole());
+		Main.registerRoom(BlueTreeRoom.class, new BlueTreeRoom());
+		
 	}
 
 	static public String[] getCommonImages() {
@@ -84,8 +94,5 @@ public class GameStorage {
 		return imageList;
 	}
 	
-	static public String[] getCategories() {
-		String[] categories = { "hats", "Heads", "Tricks", "Misc" };
-		return categories;
-	}	
+
 }

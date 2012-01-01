@@ -33,8 +33,9 @@ public class MagicRoom extends Room {
 		if(!getBackground().equals("MagicRoom-Before.png")) return ;
 		String firstLine[] = {"OK.", "You can do this."};
 		getDialog().say(Arrays.asList(firstLine), magician);
-		getDialog().say("Concentrate", magician);
-		getDialog().say("Rabbit.  Hat.  This is magic 101.", magician);
+		String secondLine[] = {"Pulling a rabbit from a hat.", "This should be easy"};
+		getDialog().say(Arrays.asList(secondLine), magician);
+		getDialog().say("Concentrate.", magician);
 		DialogElement playerPop = magician.say("Abracabaca...");  
 		playerPop.setPostAction(new IntroducePlayer());
 		getDialog().add(playerPop);
@@ -50,7 +51,7 @@ public class MagicRoom extends Room {
 			Main.setMouseMode(new MovePlayer());
 			
 			String playerIntro[] = {"I'm a magic hat.","You stay here.","I'll go on a head."};
-			Main.room.getDialog().say(Arrays.asList(playerIntro), Main.player);
+			Main.room.addDrawable(Main.player.say(Arrays.asList(playerIntro), 50));
 			GameStorage.saveGame();
 		}
 	}

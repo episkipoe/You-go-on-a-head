@@ -1,14 +1,16 @@
-package com.episkipoe.hat.rooms;
+package com.episkipoe.hat.common.inventory;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import com.episkipoe.hat.client.Main;
 import com.episkipoe.hat.common.Door;
-import com.episkipoe.hat.common.GameStorage;
 import com.episkipoe.hat.common.Point;
 import com.episkipoe.hat.common.draw.ImageDrawable;
+import com.episkipoe.hat.common.draw.TextUtils;
 import com.episkipoe.hat.common.interact.TextClickable;
+import com.episkipoe.hat.rooms.Room;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.dom.client.ImageElement;
 
@@ -20,7 +22,7 @@ public class InventoryRoom extends Room {
 		setBackground("InventoryBG.png");
 	}
 	
-	private class WearableDrawable extends ImageDrawable {
+	static public class WearableDrawable extends ImageDrawable {
 		public WearableDrawable(String fileName) { 
 			setFilename(fileName);
 		}
@@ -30,7 +32,7 @@ public class InventoryRoom extends Room {
 			Main.player.setFilename(getFilename());
 		}
 	}
-	private class InventoryDrawable extends ImageDrawable {
+	static public class InventoryDrawable extends ImageDrawable {
 		public InventoryDrawable(String fileName) { 
 			setFilename(fileName);
 		}
@@ -45,8 +47,8 @@ public class InventoryRoom extends Room {
 		exit.draw(context);
 	}
 
-	String category="hats";
-	public void setCategory(String category) {
+	InventoryCategory category=new Hats();
+	public void setCategory(InventoryCategory category) {
 		this.category = category;
 	}
 	
@@ -59,12 +61,7 @@ public class InventoryRoom extends Room {
 		int maxHeight=0; 
 
 		for(String f : list) {
-			ImageDrawable d;
-			if(category.equals("hats")) {
-				d = new WearableDrawable(f);
-			} else {
-				d = new InventoryDrawable(f);
-			}
+			ImageDrawable d = category.getInventoryDrawable(f);
 			ImageElement img = d.getImageElement();
 			if(img==null) continue;
 			if(y==0) {
@@ -85,8 +82,8 @@ public class InventoryRoom extends Room {
 
 	private class SwitchCategory implements Runnable {
 		InventoryRoom room;
-		String category;
-		private SwitchCategory(InventoryRoom room, String category) {
+		InventoryCategory category;
+		private SwitchCategory(InventoryRoom room, InventoryCategory category) {
 			this.room = room;
 			this.category = category;
 		}
@@ -99,17 +96,18 @@ public class InventoryRoom extends Room {
 	
 	private void loadCategoryList() {
 		int x = 10;
-		for(String cat : GameStorage.getCategories()) {
+		for(InventoryCategory cat : InventoryCategoryFactory.getCategories()) {
 			Point location = new Point(x, Main.canvasHeight-50);
 			SwitchCategory action = new SwitchCategory(this, cat);
-			TextClickable btn = new TextClickable(Arrays.asList(cat), location, action);
+			List<String> msg = Arrays.asList(cat.getPlural());
+			TextClickable btn = new TextClickable(msg, location, action);
 			if(cat.equals(this.category)) {
 				btn.setBackgroundStyle("rgba(255,255,255,0.8)");
 			} else {
 				btn.setBackgroundStyle("rgba(128,128,128,0.8)");
 			}
 			addDrawable(btn);
-			x+= 60;
+			x+= (TextUtils.getTextWidth(msg)+10);
 		}
 	}
 
@@ -118,10 +116,19 @@ public class InventoryRoom extends Room {
 	
 	@Override
 	public void onLoad() { 
+		reload();
+	}
+	
+	@Override
+	public void onEnter() {
+		reload();
+	}
+	
+	public void reload() {
 		clearDrawables();
 		addDrawable(exit);
 		loadCategoryList();
-		loadItems();
+		loadItems();	
 	}
 
 }

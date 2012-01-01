@@ -20,6 +20,9 @@ public class ImageLibrary {
 	}
 	
 	public ImageElement getImage(String filename) {
+		if(!images.containsKey(filename)) {
+			loadImage(filename);
+		}
 		return images.get(filename);
 	}
 	
