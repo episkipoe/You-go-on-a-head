@@ -21,5 +21,9 @@ public class CaribbeanRoom extends Room {
 		BackgroundClickable dominica = new BackgroundClickable(new Point(672, 365), new Point(740, 388));
 		dominica.setAction(new SwitchRoom(DominicaRoom.class));
 		addDrawable(dominica);	
+		
+		BackgroundClickable tortuga = new BackgroundClickable(new Point(369, 222), new Point(388, 240));
+		tortuga.setAction(Tortuga.getGoToTortuga());
+		addDrawable(tortuga);	
 	}
 }

@@ -36,6 +36,10 @@ public class BackgroundClickable implements Clickable, Drawable {
 	
 	@Override
 	public void click() {
+		if(action==null) {
+			System.out.println("WARNING: clickable with null action");
+			return;
+		}
 		action.run();
 	}
 

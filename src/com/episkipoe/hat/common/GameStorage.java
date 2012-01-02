@@ -7,13 +7,10 @@ import com.episkipoe.hat.common.inventory.InventoryRoom;
 import com.episkipoe.hat.player.MovePlayer;
 import com.episkipoe.hat.rooms.caribbean.*;
 import com.episkipoe.hat.rooms.magic.*;
-import com.episkipoe.hat.rooms.maps.CityMapRoom;
-import com.episkipoe.hat.rooms.maps.NorthAmericaRoom;
-import com.episkipoe.hat.rooms.northpole.BlueTreeRoom;
-import com.episkipoe.hat.rooms.northpole.NorthPole;
-import com.episkipoe.hat.rooms.park.FaceParkRoom;
-import com.episkipoe.hat.rooms.party.PartyStore;
-import com.episkipoe.hat.rooms.party.RioRoom;
+import com.episkipoe.hat.rooms.maps.*;
+import com.episkipoe.hat.rooms.northpole.*;
+import com.episkipoe.hat.rooms.park.*;
+import com.episkipoe.hat.rooms.party.*;
 import com.google.gwt.storage.client.Storage;
 
 public class GameStorage {
@@ -22,6 +19,7 @@ public class GameStorage {
 		if(localStorage == null) return ;
 		localStorage.setItem("player_filename", Main.player.getFilename());
 		localStorage.setItem("player_inventory", Main.inventory.toString());
+		localStorage.setItem("player_money", String.valueOf(Main.player.getMoney()));
 	}
 	
 	static public boolean loadGame() throws Exception {
@@ -39,6 +37,12 @@ public class GameStorage {
 		if(playerInventory != null) { 
 			Main.inventory.fromString(playerInventory);
 		}
+		
+		String playerMoney = localStorage.getItem("player_money");
+		if(playerMoney != null) {
+			Main.player.setMoney(Integer.valueOf(playerMoney));
+		}
+		
 		Main.switchRoom(CityMapRoom.class);	
 		Main.getRoom(MagicRoom.class).setBackground("MagicRoom.png");
 		return true;
@@ -70,6 +74,7 @@ public class GameStorage {
 		//party
 		Main.registerRoom(PartyStore.class, new PartyStore());
 		Main.registerRoom(RioRoom.class, new RioRoom());
+		Main.registerRoom(MardiGras.class, new MardiGras());
 		//Caribbean
 		Main.registerRoom(CaribbeanRoom.class, new CaribbeanRoom());
 		//	Cuba
@@ -78,9 +83,12 @@ public class GameStorage {
 		Main.registerRoom(CubaSoldierRoom.class, new CubaSoldierRoom());
 		//	Dominica
 		Main.registerRoom(DominicaRoom.class, new DominicaRoom());
-		Main.registerRoom(DominicaDiveShop.class, new DominicaDiveShop());
 		Main.registerRoom(DominicaChristmasRoom.class, new DominicaChristmasRoom());
+		Main.registerRoom(DominicaDiveShop.class, new DominicaDiveShop());
+		Main.registerRoom(GoDiveRoom.class, new GoDiveRoom());
 		Main.registerRoom(Underwater.class, new Underwater());
+		Main.registerRoom(Tortuga.class, new Tortuga());
+		Main.registerRoom(PlunderinRoom.class, new PlunderinRoom());
 		//Park
 		Main.registerRoom(FaceParkRoom.class, new FaceParkRoom());
 		//North Pole

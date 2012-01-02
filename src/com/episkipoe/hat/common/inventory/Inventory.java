@@ -47,11 +47,15 @@ public class Inventory extends ImageDrawable {
 	public void pickup(String fileName, InventoryCategory category) {
 		Main.inventory.addItem(fileName, category);
 		String msg = "New " + category.getName();
-		ImageElement img = getImageElement();
-		Point location = new Point(5, img.getHeight()+5);
-		Main.room.addDrawable(new DialogElement(msg, location, 30));
+		pickupNotify(msg);
 		category.playerPickedUp(fileName);
 		GameStorage.saveGame();		
+	}
+	
+	public void pickupNotify(String msg) {
+		ImageElement img = getImageElement();
+		Point location = new Point(5, img.getHeight()+5);
+		Main.room.addDrawable(new DialogElement(msg, location, 30));		
 	}
 	
 	public static class Pickup implements Runnable {

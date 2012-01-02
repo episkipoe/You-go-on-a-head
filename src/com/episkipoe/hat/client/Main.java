@@ -8,6 +8,7 @@ import java.util.Map;
 import com.episkipoe.hat.common.GameStorage;
 import com.episkipoe.hat.common.Point;
 import com.episkipoe.hat.common.draw.ImageLibrary;
+import com.episkipoe.hat.common.draw.TextUtils;
 import com.episkipoe.hat.common.interact.MouseMode;
 import com.episkipoe.hat.common.inventory.Inventory;
 import com.episkipoe.hat.common.inventory.InventoryRoom;
@@ -149,9 +150,13 @@ public class Main implements EntryPoint {
 	 * @param newRoom  becomes the new {@link #room}
 	 * @throws Exception
 	 */
-	static public void switchRoom(Class <? extends Room> newRoom) throws Exception {
+	static public void switchRoom(Class <? extends Room> newRoom) {
 		previousRoom = room;
-		room = getRoom(newRoom);
+		try {
+			room = getRoom(newRoom);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		if(room==null) {
 			System.out.println("Room " + newRoom + " could not be loaded");
 		}
@@ -163,7 +168,7 @@ public class Main implements EntryPoint {
 	 * switch to the {@link #previousRoom}
 	 * @throws Exception
 	 */
-	static public void goBack() throws Exception {
+	static public void goBack() {
 		switchRoom(previousRoom.getClass());
 	}
 	
@@ -199,6 +204,8 @@ public class Main implements EntryPoint {
 		if (!(Main.room instanceof InventoryRoom)) {
 			inventory.draw(context);
 		}
+		String money = "$"+Main.player.getMoney();
+		TextUtils.drawText(context, Arrays.asList(money), new Point(0,100), "rgba(255,255,255,1)", "rgba(0,0,0,1)");
 		player.draw(context);
 	}
 	

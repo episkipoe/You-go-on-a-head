@@ -6,6 +6,7 @@ import com.episkipoe.hat.rooms.Room;
 import com.episkipoe.hat.rooms.SwitchRoom;
 import com.episkipoe.hat.rooms.caribbean.CaribbeanRoom;
 import com.episkipoe.hat.rooms.northpole.NorthPole;
+import com.episkipoe.hat.rooms.party.MardiGras;
 import com.episkipoe.hat.rooms.party.RioRoom;
 
 public class NorthAmericaRoom extends Room {
@@ -15,6 +16,10 @@ public class NorthAmericaRoom extends Room {
 		BackgroundClickable northPole = new BackgroundClickable(new Point(514, 4), new Point(630, 47));
 		northPole.setAction(NorthPole.getGoToNorthPole());
 		addDrawable(northPole);		
+		
+		BackgroundClickable mardiGras = new BackgroundClickable(new Point(397, 359), new Point(414, 377));
+		mardiGras.setAction(MardiGras.getGoToMardiGras());
+		addDrawable(mardiGras);		
 		
 		BackgroundClickable vegas = new BackgroundClickable(new Point(295, 295), new Point(330, 330));
 		vegas.setAction(RioRoom.getGoToVegas());
