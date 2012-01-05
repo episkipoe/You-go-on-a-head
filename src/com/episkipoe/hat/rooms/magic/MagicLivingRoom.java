@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.episkipoe.hat.client.Main;
-import com.episkipoe.hat.common.Door;
 import com.episkipoe.hat.common.Point;
 import com.episkipoe.hat.common.dialog.Dialog;
 import com.episkipoe.hat.common.dialog.DialogElement;
@@ -21,8 +20,8 @@ public class MagicLivingRoom extends Room {
 		exit.setAction(new SwitchRoom(CityMapRoom.class));
 		addDrawable(exit);
 
-		addDrawable(new Door(new Point(60, 500), MagicRoom.class, "LeftArrow.png"));
-		addDrawable(new Door(new Point(630, 500), MagicKitchen.class, "RightArrow.png"));
+		addLeftDoor(MagicRoom.class);
+		addRightDoor(MagicKitchen.class);
 		
 		BackgroundClickable penguin = new BackgroundClickable(new Point(428,495), new Point(460, 540)); 
 		penguin.setAction(new ClickPenguin());

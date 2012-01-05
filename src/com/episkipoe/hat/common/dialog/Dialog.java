@@ -14,7 +14,7 @@ import com.google.gwt.canvas.dom.client.Context2d;
  *
  */
 public class Dialog implements Drawable {
-	public static final int DEFAULT_DURATION = 80;
+	public static final int DEFAULT_DURATION = 60;
 	private Queue<DialogElement> elements;
 	public Dialog() { 
 		elements = new LinkedList<DialogElement>();
@@ -27,16 +27,27 @@ public class Dialog implements Drawable {
 	public void add(DialogElement element) { 
 		elements.add(element); 
 	}
-	
 	public void add(List<String> message, Point location) {
 		elements.add(new DialogElement(message, location));
 	}
-
-	public void say(String message, Speaker speaker) {
-		say(Arrays.asList(message), speaker);
+	public void add(String message, Speaker speaker) {
+		add(Arrays.asList(message), speaker);
 	}
-	public void say(List<String> message, Speaker speaker) {
+	public void add(List<String> message, Speaker speaker) {
 		elements.add(speaker.say(message, DEFAULT_DURATION));
+	}
+
+	/**
+	 * cancels any dialog in progress
+	 * @param element
+	 */
+	public void say(DialogElement element) { 
+		clear();
+		elements.add(element); 
+	}
+	
+	public void clear() {
+		elements.clear();
 	}
 	
 	@Override
@@ -50,5 +61,6 @@ public class Dialog implements Drawable {
 	public boolean isEmpty() {
 		return elements.isEmpty();
 	}
+
 
 }

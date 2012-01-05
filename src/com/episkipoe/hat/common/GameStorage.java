@@ -8,7 +8,9 @@ import com.episkipoe.hat.player.MovePlayer;
 import com.episkipoe.hat.rooms.caribbean.*;
 import com.episkipoe.hat.rooms.magic.*;
 import com.episkipoe.hat.rooms.maps.*;
+import com.episkipoe.hat.rooms.mexico.*;
 import com.episkipoe.hat.rooms.northpole.*;
+import com.episkipoe.hat.rooms.ohio.Columbus;
 import com.episkipoe.hat.rooms.park.*;
 import com.episkipoe.hat.rooms.party.*;
 import com.google.gwt.storage.client.Storage;
@@ -77,6 +79,7 @@ public class GameStorage {
 		Main.registerRoom(MardiGras.class, new MardiGras());
 		//Caribbean
 		Main.registerRoom(CaribbeanRoom.class, new CaribbeanRoom());
+		Main.registerRoom(DiveShop.class, new DiveShop());
 		//	Cuba
 		Main.registerRoom(CubaBusRoom.class, new CubaBusRoom());
 		Main.registerRoom(CubaCheRoom.class, new CubaCheRoom());
@@ -89,8 +92,14 @@ public class GameStorage {
 		Main.registerRoom(Underwater.class, new Underwater());
 		Main.registerRoom(Tortuga.class, new Tortuga());
 		Main.registerRoom(PlunderinRoom.class, new PlunderinRoom());
+		//	Mexico
+		Main.registerRoom(MariachiRoom.class, new MariachiRoom());
+		Main.registerRoom(MayanRoom.class, new MayanRoom());
 		//Park
 		Main.registerRoom(FaceParkRoom.class, new FaceParkRoom());
+		Main.registerRoom(SquidHeadRoom.class, new SquidHeadRoom());
+		//Ohio
+		Main.registerRoom(Columbus.class, new Columbus());
 		//North Pole
 		Main.registerRoom(NorthPole.class, new NorthPole());
 		Main.registerRoom(BlueTreeRoom.class, new BlueTreeRoom());

@@ -152,6 +152,7 @@ public class Main implements EntryPoint {
 	 */
 	static public void switchRoom(Class <? extends Room> newRoom) {
 		previousRoom = room;
+		if(previousRoom!=null)previousRoom.getDialog().clear();
 		try {
 			room = getRoom(newRoom);
 		} catch (Exception e) {
@@ -203,9 +204,10 @@ public class Main implements EntryPoint {
 	    room.draw(context);
 		if (!(Main.room instanceof InventoryRoom)) {
 			inventory.draw(context);
+			
+			String money = "$"+Main.player.getMoney();
+			TextUtils.drawText(context, Arrays.asList(money), new Point(0,100), "rgba(255,255,255,1)", "rgba(0,0,0,1)");
 		}
-		String money = "$"+Main.player.getMoney();
-		TextUtils.drawText(context, Arrays.asList(money), new Point(0,100), "rgba(255,255,255,1)", "rgba(0,0,0,1)");
 		player.draw(context);
 	}
 	

@@ -3,7 +3,6 @@ package com.episkipoe.hat.rooms.caribbean;
 import java.util.Arrays;
 import java.util.List;
 
-import com.episkipoe.hat.common.Door;
 import com.episkipoe.hat.common.Point;
 import com.episkipoe.hat.common.interact.BackgroundClickable;
 import com.episkipoe.hat.common.inventory.Hats;
@@ -18,8 +17,8 @@ public class CubaSoldierRoom extends Room {
 		che.setAction(new Inventory.Pickup("CamoHat.png", new Hats()));
 		addDrawable(che);
 		
-		addDrawable(new Door(new Point(60, 500), CubaCheRoom.class, "LeftArrow.png"));
-		addDrawable(new Door(new Point(630, 500), CaribbeanRoom.class, "RightArrow.png"));	
+		addLeftDoor(CubaCheRoom.class);
+		addRightDoor(CaribbeanRoom.class);
 	}
 	
 	public List<String> getRequiredImages() { 

@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.episkipoe.hat.characters.Magician;
 import com.episkipoe.hat.client.Main;
-import com.episkipoe.hat.common.Door;
 import com.episkipoe.hat.common.GameStorage;
 import com.episkipoe.hat.common.Point;
 import com.episkipoe.hat.common.dialog.DialogElement;
@@ -21,7 +20,7 @@ public class MagicRoom extends Room {
 		magician.setLocation(new Point(400, 450));
 		addDrawable(magician);
 	
-		addDrawable(new Door(new Point(600, 500), MagicLivingRoom.class, "RightArrow.png"));
+		addRightDoor(MagicLivingRoom.class);
 	}
 
 	public List<String> getRequiredImages() { 
@@ -32,14 +31,14 @@ public class MagicRoom extends Room {
 	protected void onLoad() {
 		if(!getBackground().equals("MagicRoom-Before.png")) return ;
 		String firstLine[] = {"OK.", "You can do this."};
-		getDialog().say(Arrays.asList(firstLine), magician);
+		getDialog().add(Arrays.asList(firstLine), magician);
 		String secondLine[] = {"Pulling a rabbit from a hat.", "This should be easy"};
-		getDialog().say(Arrays.asList(secondLine), magician);
-		getDialog().say("Concentrate.", magician);
+		getDialog().add(Arrays.asList(secondLine), magician);
+		getDialog().add("Concentrate.", magician);
 		DialogElement playerPop = magician.say("Abracabaca...");  
 		playerPop.setPostAction(new IntroducePlayer());
 		getDialog().add(playerPop);
-		getDialog().say("What was that?", magician);
+		getDialog().add("What was that?", magician);
 	}
 	
 	private class IntroducePlayer implements Runnable {

@@ -15,7 +15,7 @@ public class GoDiveRoom extends Room {
 	public GoDiveRoom() { 
 		setBackground("GoDive.png");
 		
-		BackgroundClickable dive = new BackgroundClickable(new Point(207, 258), new Point(373,326));
+		BackgroundClickable dive = new BackgroundClickable(new Point(178, 180), new Point(596,367));
 		dive.setAction(getGoDiving());
 		addDrawable(dive);		
 		
@@ -25,13 +25,13 @@ public class GoDiveRoom extends Room {
 	static private class DiveCriterion implements Criterion {
 		@Override
 		public boolean valid() {
-			String validHats[] = {"Scuba.png"};
+			String validHats[] = {"Scuba.png", "FishHookHat.png"};
 			return Main.player.wearing(Arrays.asList(validHats));	
 		}
 
 		@Override
 		public Collection<String> getFailureMessage() {
-			return Arrays.asList("You can't go diving dressed like that.");
+			return Arrays.asList("You can't go diving looking like that.");
 		}
 	}
 	

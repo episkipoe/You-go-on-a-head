@@ -5,7 +5,9 @@ import com.episkipoe.hat.common.interact.BackgroundClickable;
 import com.episkipoe.hat.rooms.Room;
 import com.episkipoe.hat.rooms.SwitchRoom;
 import com.episkipoe.hat.rooms.caribbean.CaribbeanRoom;
+import com.episkipoe.hat.rooms.mexico.MariachiRoom;
 import com.episkipoe.hat.rooms.northpole.NorthPole;
+import com.episkipoe.hat.rooms.ohio.Columbus;
 import com.episkipoe.hat.rooms.party.MardiGras;
 import com.episkipoe.hat.rooms.party.RioRoom;
 
@@ -25,12 +27,20 @@ public class NorthAmericaRoom extends Room {
 		vegas.setAction(RioRoom.getGoToVegas());
 		addDrawable(vegas);
 		
+		BackgroundClickable mexico = new BackgroundClickable(new Point(295, 375), new Point(364, 429));
+		mexico.setAction(new SwitchRoom(MariachiRoom.class));
+		addDrawable(mexico);		
+		
 		BackgroundClickable caribbean = new BackgroundClickable(new Point(435, 409), new Point(535, 460));
 		caribbean.setAction(new SwitchRoom(CaribbeanRoom.class));
 		addDrawable(caribbean);
 		
-		BackgroundClickable home = new BackgroundClickable(new Point(412, 300), new Point(445, 334));
-		home.setAction(new SwitchRoom(CityMapRoom.class));
-		addDrawable(home);
+		BackgroundClickable missouri = new BackgroundClickable(new Point(414, 326), new Point(437, 308));
+		missouri.setAction(new SwitchRoom(CityMapRoom.class));
+		addDrawable(missouri);
+		
+		BackgroundClickable ohio = new BackgroundClickable(new Point(449, 300), new Point(459, 334));
+		ohio.setAction(new SwitchRoom(Columbus.class));
+		addDrawable(ohio);
 	}
 }

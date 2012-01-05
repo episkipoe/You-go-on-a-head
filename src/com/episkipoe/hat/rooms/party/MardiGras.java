@@ -5,6 +5,10 @@ import java.util.Collection;
 
 import com.episkipoe.hat.client.Main;
 import com.episkipoe.hat.common.Criterion;
+import com.episkipoe.hat.common.Point;
+import com.episkipoe.hat.common.interact.BackgroundClickable;
+import com.episkipoe.hat.common.inventory.Hats;
+import com.episkipoe.hat.common.inventory.Inventory;
 import com.episkipoe.hat.rooms.maps.NorthAmericaRoom;
 import com.episkipoe.hat.rooms.Room;
 import com.episkipoe.hat.rooms.SlideshowRoom;
@@ -14,6 +18,17 @@ public class MardiGras extends SlideshowRoom {
 	public MardiGras() { 
 		addSlide("MardiGras-STL0.png");
 	}
+	
+	protected void loadSlide() { 
+		switch(currentSlide) {
+			case 0:
+				BackgroundClickable spikeHat = new BackgroundClickable(new Point(215, 434), new Point(322, 542));
+				spikeHat.setAction(new Inventory.Pickup("MardiGrasSpikeHat.png", new Hats()));
+				addDrawable(spikeHat);				
+				break;
+		}
+	}
+
 	@Override
 	protected Class<? extends Room> getExitRoom() {
 		return NorthAmericaRoom.class;

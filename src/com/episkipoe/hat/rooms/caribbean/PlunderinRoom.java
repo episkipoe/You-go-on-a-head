@@ -15,6 +15,7 @@ public class PlunderinRoom extends Room {
 	List<String> ships=new ArrayList<String>();
 	public PlunderinRoom() { 
 		ships.add("RiverShip.png");
+		ships.add("CannonAndCruiseShip.png");
 		ships.add("BigBoat.png");
 		addDrawable(new Door(new Point(560, 500), Tortuga.class));	
 	}
@@ -31,7 +32,7 @@ public class PlunderinRoom extends Room {
 			TextUtils.growl(Arrays.asList(msg));
 			return;
 		}
-		Main.player.addMoney(100);
+		Main.player.addMoney(100+50*ship);
 		setBackground(ships.get(ship));
 	}
 

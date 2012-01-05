@@ -2,6 +2,7 @@ package com.episkipoe.hat.common.draw;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 import com.episkipoe.hat.client.Main;
 import com.episkipoe.hat.common.Point;
@@ -80,4 +81,15 @@ public abstract class ImageDrawable implements Drawable, Clickable, Speaker {
 		double y = getLocation().y-img.getHeight()*0.5;
 		return new DialogElement(message, new Point(x,y), duration);
 	}
+
+	/**
+	 * Say (at random) one out of the list of things that can be said
+	 * @param message
+	 * @return
+	 */
+	public final DialogElement say(List<List<String>> sayings) {
+		Random rnd = new Random();
+		int msgIdx = rnd.nextInt(sayings.size());
+		return say(sayings.get(msgIdx), Dialog.DEFAULT_DURATION);
+	}	
 }

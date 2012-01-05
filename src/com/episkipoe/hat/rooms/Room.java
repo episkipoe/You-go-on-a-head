@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 import com.episkipoe.hat.client.Main;
+import com.episkipoe.hat.common.Door;
 import com.episkipoe.hat.common.Point;
 import com.episkipoe.hat.common.dialog.Dialog;
 import com.episkipoe.hat.common.dialog.DialogElement;
@@ -68,7 +69,56 @@ public abstract class Room {
 	public final void addDrawable(Drawable d) {
 		getDrawables().add(d);
 	}
-	public final void clearDrawables() { getDrawables().clear(); }
+
+	List<Drawable> itemsToPrune;
+	private final List<Drawable> getItemsToPrune() { 
+		if(itemsToPrune==null) itemsToPrune = new ArrayList<Drawable>();
+		return itemsToPrune;
+	}
+	public final void removeDrawable(Drawable d) {
+		getItemsToPrune().add(d);
+	}
+	public final void clearDrawables() { 
+		//don't remove drawables directly, concurrent modification error may occur
+		for(Drawable d: getDrawables()) { removeDrawable(d); }
+	}
+	
+	
+	/**
+	 * exits are separate from drawables so that drawables can be cleared without nuking exits
+	 */
+	private List<Drawable> exits;
+	private final List<Drawable> getExits() {
+		if(exits == null) exits = new ArrayList<Drawable>();
+		return exits;
+	}
+	public final void addExit(Drawable e) {
+		getExits().add(e);
+	}	
+	
+	/**
+	 * Convenience method: adds a exit {@link Door} in the default location and style
+	 * @param exit the room to exit to
+	 */
+	protected final void addExit(Class<? extends Room> exit) {
+		addExit(new Door(new Point(560, 500), exit));
+	}
+	/**
+	 * Convenience method:  adds a {@link Door} to the next room in the default location and style
+	 * @param room
+	 */
+	protected final void addRightDoor(Class<? extends Room> room) {
+		addExit(new Door(new Point(700, 500), room, "RightArrow.png"));
+		
+	}
+	/**
+	 * Convenience method:  adds a {@link Door} to the next room in the default location and style
+	 * @param room
+	 */
+	protected final void addLeftDoor(Class<? extends Room> room) {
+		addExit(new Door(new Point(100, 500), room, "LeftArrow.png"));
+	}
+	
 	
 	private List<Clickable> clickables; 
 	private final List<Clickable> getClickables() {
@@ -99,17 +149,33 @@ public abstract class Room {
 	public final void draw(Context2d context) {
 		if(getBackground() != null) ImageUtils.draw(context, getBackground());
 		preDraw(context);
-		List<Drawable> itemsToPrune=new ArrayList<Drawable>();
 		for(Drawable d: getDrawables()) {
 			d.draw(context);
 			if(itemExpired(d)) {
-				itemsToPrune.add(d);
+				getItemsToPrune().add(d);
 			}
-
 		}
-		getDrawables().removeAll(itemsToPrune);
+		getDrawables().removeAll(getItemsToPrune());
+		getItemsToPrune().clear();
+		for(Drawable e: getExits()) {
+			e.draw(context);
+		}
 		postDraw(context);
 		getDialog().draw(context);
+	}
+	
+	private List<Clickable> getAllClickables() {
+		List<Clickable> clickList = new ArrayList<Clickable>();
+		for(Drawable d: getExits()) {
+			clickList.add((Clickable)d);
+		}
+		for(Drawable d: getDrawables()) {
+			if(d instanceof Clickable) {
+				clickList.add((Clickable)d);
+			}
+		}
+		clickList.addAll(getClickables());
+		return clickList;
 	}
 
 	/**
@@ -118,6 +184,13 @@ public abstract class Room {
 	 * @throws Exception 
 	 */
 	public final void click(Point point) throws Exception {
+		for(Drawable d: getExits()) {
+			Clickable target = (Clickable)d;
+			if(target.intersectsWith(point)) {
+				target.click();
+				return;
+			}
+		}
 		for(Drawable d: getDrawables()) {
 			if(d instanceof Clickable) {
 				Clickable target = (Clickable)d;
@@ -130,15 +203,9 @@ public abstract class Room {
 	}
 	
 	public final boolean pointIsClickable(Point point) {
-		for(Drawable d: getDrawables()) {
-			if(d instanceof Clickable) {
-				Clickable target = (Clickable)d;
-				if(target.intersectsWith(point)) return true;
-			}
-		}
-		for(Clickable c: getClickables()) {
+		for(Clickable c: getAllClickables()) {
 			if(c.intersectsWith(point)) return true;
-		}		
+		}
 		return false;
 	}
 	

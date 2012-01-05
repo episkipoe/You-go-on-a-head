@@ -19,6 +19,7 @@ public class InventoryRoom extends Room {
 	public InventoryRoom() { 
 		exit = new Door();
 		exit.setLocation(new Point(750, 550));
+		addExit(exit);
 		setBackground("InventoryBG.png");
 	}
 	
@@ -97,7 +98,7 @@ public class InventoryRoom extends Room {
 	private void loadCategoryList() {
 		int x = 10;
 		for(InventoryCategory cat : InventoryCategoryFactory.getCategories()) {
-			Point location = new Point(x, Main.canvasHeight-50);
+			Point location = new Point(x, 20);
 			SwitchCategory action = new SwitchCategory(this, cat);
 			List<String> msg = Arrays.asList(cat.getPlural());
 			TextClickable btn = new TextClickable(msg, location, action);
@@ -126,7 +127,6 @@ public class InventoryRoom extends Room {
 	
 	public void reload() {
 		clearDrawables();
-		addDrawable(exit);
 		loadCategoryList();
 		loadItems();	
 	}

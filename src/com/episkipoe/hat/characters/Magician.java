@@ -3,7 +3,6 @@ package com.episkipoe.hat.characters;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 
 import com.episkipoe.hat.client.Main;
 import com.episkipoe.hat.common.draw.ImageDrawable;
@@ -17,40 +16,71 @@ public class Magician extends ImageDrawable {
 	int timesClicked=0;
 	public void click() { 
 		if(!Main.inventory.contains("MagicHatBeer.png")) {
-			String msg[] = {"I'm feeling a bit parched", "Can you bring me a brew?"};
-			Main.room.getDialog().add(say(Arrays.asList(msg), 40));
+			String msg[] = {"I'm feeling a bit parched", "How 'bout you bring me a brew..."};
+			Main.room.getDialog().say(this.say(Arrays.asList(msg), 40));
 			return;
 		}
+		
 		if(Main.player.wearing(Arrays.asList("SantaHat.png"))) {
-			Main.room.getDialog().add(say(Arrays.asList("Merry Christmas!"), 40));
+			Main.room.getDialog().say(this.say(Arrays.asList("Merry Christmas!"), 40));
 			return;
 		}
+		
 		if(Main.player.wearing(Arrays.asList("PirateHat.png"))) {
-			Main.room.getDialog().add(say(Arrays.asList("Avast ye matey!"), 40));
+			List<List<String>> sayings = new ArrayList<List<String>>();
+			sayings.add(Arrays.asList("Avast ye matey!"));
+			sayings.add(Arrays.asList("Have ye been to Tortuga?"));
+			Main.room.getDialog().say(this.say(sayings));
 			return;
 		}
+		
 		if(Main.player.wearing(Arrays.asList("RedPartyHat.png"))) {
-			Main.room.getDialog().add(say(Arrays.asList("Wow!  That's a nice hat."), 40));
+			List<List<String>> sayings = new ArrayList<List<String>>();
+			sayings.add(Arrays.asList("Wow!  That's a nice hat."));
+			Main.room.getDialog().say(this.say(sayings));
+			return;	
+		}
+		
+		if(Main.player.wearing(Arrays.asList("ChickenMask.png"))) {
+			List<List<String>> sayings = new ArrayList<List<String>>();
+			sayings.add(Arrays.asList("Aaaaaahhhhh!!!"));
+			sayings.add(Arrays.asList("You're creepin' me out"));
+			sayings.add(Arrays.asList("Get the cluck out of here"));
+			Main.room.getDialog().say(this.say(sayings));
 			return;
 		}
-		if(Main.player.wearing(Arrays.asList("ChickenMask.png"))) {
-			Main.room.getDialog().add(say(Arrays.asList("Aaaaahhhh!!!."), 40));
+		
+		if(Main.player.wearing(Arrays.asList("CheBeret.png"))) {
+				List<List<String>> sayings = new ArrayList<List<String>>();
+			sayings.add(Arrays.asList("Vive la revolucion"));
+			Main.room.getDialog().say(this.say(sayings));
+			return;		
+		}
+		
+		if(Main.player.wearing(Arrays.asList("sombrero.png"))) {
+			List<List<String>> sayings = new ArrayList<List<String>>();
+			sayings.add(Arrays.asList("Hola!"));	
+			sayings.add(Arrays.asList("Como estas?"));	
+			sayings.add(Arrays.asList("Me gusta tu sombrero"));	
+			sayings.add(Arrays.asList("Will you play me a tune?"));	
+			Main.room.getDialog().say(this.say(sayings));
 			return;		
 		}
 
-		if(timesClicked++ == 8) {
-			Main.room.getDialog().add(say(Arrays.asList("Why do you keep poking me?"), 80));
+		if((timesClicked % 8) == 0) {
+			Main.room.getDialog().say(say(Arrays.asList("Why do you keep poking me?"), 80));
 		} else {
-			Random rnd = new Random();
 			List<List<String>> sayings = new ArrayList<List<String>>();
 			sayings.add(Arrays.asList("Hey!"));
 			sayings.add(Arrays.asList("Hey!"));
 
+			if(!Main.inventory.contains("KrackenRum.png")) {
+				sayings.add(Arrays.asList("I'll bet there's all sorts of booze in Vegas"));
+			}
 			if(!Main.inventory.contains("SantaHat.png")) {
 				sayings.add(Arrays.asList("Have you been to the North Pole yet?"));
 			}
-			int msgIdx = rnd.nextInt(sayings.size());
-			Main.room.getDialog().add(say(sayings.get(msgIdx), 40));
+			Main.room.getDialog().say(say(sayings));
 		}
 	}
 

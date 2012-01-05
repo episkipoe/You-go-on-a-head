@@ -9,38 +9,50 @@ import com.episkipoe.hat.common.Point;
 import com.episkipoe.hat.common.draw.ImageDrawable;
 
 public abstract class SlideshowRoom extends Room {
+	/**
+	 * @return  the room to return to after the last slide
+	 */
 	abstract protected Class<? extends Room> getExitRoom();
+	/**
+	 * called after changing slides
+	 */
+	protected void loadSlide() { }
 
 	final public void onLoad() {
-		addDoors();
+		addExit(new NextButton());
+		addExit(new BackButton());
 	}
+	
 	final public void onEnter() {
 		currentSlide=0;
-		setBackground(slides.get(currentSlide));
+		roomChanged();
 	}
+	
+	final private void roomChanged() {
+		setBackground(slides.get(currentSlide));
+		clearDrawables();
+		loadSlide();
+	}
+	
 	private List<String> slides = new ArrayList<String>();
 	protected final void addSlide(String fileName) { 
 		slides.add(fileName);
 	}
 	
 	@Override
-	public Collection<String> getRequiredImages() {
+	public final Collection<String> getRequiredImages() {
 		return slides;
 	}
 	
-	private int currentSlide=0;
-	public void addDoors() {
-		addDrawable(new NextButton());
-		addDrawable(new BackButton());
-	}
-	
+	protected int currentSlide=0;
+
 	private void next() {
 		currentSlide++;
 		if(currentSlide >= slides.size()) {
 			Main.switchRoom(getExitRoom());
 			return;
 		}
-		setBackground(slides.get(currentSlide));
+		roomChanged();
 	}
 	private void back() {
 		currentSlide--;
@@ -48,12 +60,12 @@ public abstract class SlideshowRoom extends Room {
 			Main.switchRoom(getExitRoom());
 			return;
 		}
-		setBackground(slides.get(currentSlide));
+		roomChanged();
 	}
 	private class NextButton extends ImageDrawable {
 		private NextButton() { 
 			setFilename("RightArrow.png");
-			setLocation(new Point(630, 500));
+			setLocation(new Point(700, 500));
 		}
 		@Override
 		public void click() throws Exception { next(); }
@@ -62,7 +74,7 @@ public abstract class SlideshowRoom extends Room {
 	private class BackButton extends ImageDrawable {
 		private BackButton() { 
 			setFilename("LeftArrow.png");
-			setLocation(new Point(60, 500));
+			setLocation(new Point(100, 500));
 		}
 		@Override
 		public void click() throws Exception { back(); }
