@@ -9,7 +9,7 @@ import com.episkipoe.hat.common.Point;
 import com.episkipoe.hat.common.interact.BackgroundClickable;
 import com.episkipoe.hat.common.inventory.Hats;
 import com.episkipoe.hat.common.inventory.Inventory;
-import com.episkipoe.hat.rooms.maps.NorthAmericaRoom;
+import com.episkipoe.hat.rooms.maps.NorthAmerica;
 import com.episkipoe.hat.rooms.Room;
 import com.episkipoe.hat.rooms.SlideshowRoom;
 import com.episkipoe.hat.rooms.SwitchRoom;
@@ -31,7 +31,7 @@ public class MardiGras extends SlideshowRoom {
 
 	@Override
 	protected Class<? extends Room> getExitRoom() {
-		return NorthAmericaRoom.class;
+		return NorthAmerica.class;
 	}
 	static private class MardiGrasCriterion implements Criterion {
 		public MardiGrasCriterion() { }

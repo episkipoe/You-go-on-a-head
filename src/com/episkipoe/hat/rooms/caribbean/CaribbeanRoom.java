@@ -4,14 +4,14 @@ import com.episkipoe.hat.common.Point;
 import com.episkipoe.hat.common.interact.BackgroundClickable;
 import com.episkipoe.hat.rooms.Room;
 import com.episkipoe.hat.rooms.SwitchRoom;
-import com.episkipoe.hat.rooms.maps.NorthAmericaRoom;
+import com.episkipoe.hat.rooms.maps.NorthAmerica;
 
 public class CaribbeanRoom extends Room {
 	public CaribbeanRoom() { 
 		setBackground("Caribbean.png");
 		
 		BackgroundClickable northAmerica = new BackgroundClickable(new Point(744, 111), new Point(767, 134));
-		northAmerica.setAction(new SwitchRoom(NorthAmericaRoom.class));
+		northAmerica.setAction(new SwitchRoom(NorthAmerica.class));
 		addDrawable(northAmerica);		
 		
 		BackgroundClickable cuba = new BackgroundClickable(new Point(62, 130), new Point(330, 238));

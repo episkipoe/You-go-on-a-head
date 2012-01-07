@@ -12,7 +12,7 @@ import com.episkipoe.hat.common.inventory.Hats;
 import com.episkipoe.hat.common.inventory.Inventory;
 import com.episkipoe.hat.rooms.Room;
 import com.episkipoe.hat.rooms.SwitchRoom;
-import com.episkipoe.hat.rooms.maps.NorthAmericaRoom;
+import com.episkipoe.hat.rooms.maps.NorthAmerica;
 
 public class NorthPole extends Room {
 	public NorthPole() { 
@@ -26,7 +26,7 @@ public class NorthPole extends Room {
 		frontDoor.setAction(new SwitchRoom(BlueTreeRoom.class));
 		addDrawable(frontDoor);
 		
-		addDrawable(new Door(new Point(560, 500), NorthAmericaRoom.class));
+		addDrawable(new Door(new Point(560, 500), NorthAmerica.class));
 	}
 
 	static private class NorthPoleCriterion implements Criterion {

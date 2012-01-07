@@ -7,7 +7,7 @@ import com.episkipoe.hat.client.Main;
 import com.episkipoe.hat.common.Point;
 import com.episkipoe.hat.common.dialog.Dialog;
 import com.episkipoe.hat.common.dialog.DialogElement;
-import com.episkipoe.hat.common.interact.BackgroundClickable;
+import com.episkipoe.hat.common.interact.BackgroundAction;
 import com.episkipoe.hat.common.inventory.Collectables;
 import com.episkipoe.hat.rooms.Room;
 
@@ -20,7 +20,7 @@ public class MagicKitchen extends Room {
 		return Arrays.asList(images); 
 	}
 
-	BackgroundClickable beer;
+	BackgroundAction beer;
 	protected void onLoad() {
 		clearDrawables();
 		addLeftDoor(MagicLivingRoom.class);
@@ -28,9 +28,8 @@ public class MagicKitchen extends Room {
 			setBackground("Kitchen.png");
 		} else {
 			setBackground("Kitchen-WithBeer.png");
-		
-			beer = new BackgroundClickable(new Point(177,260), new Point(250,350));
-			beer.setAction(new PickupBeer());
+	
+			beer = new BackgroundAction(new Point(177,260), new Point(250,350), new PickupBeer());
 			addDrawable(beer);
 		}
 	}

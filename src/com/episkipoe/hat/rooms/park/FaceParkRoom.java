@@ -7,7 +7,7 @@ import com.episkipoe.hat.common.Point;
 import com.episkipoe.hat.common.dialog.DialogElement;
 import com.episkipoe.hat.common.interact.BackgroundClickable;
 import com.episkipoe.hat.rooms.Room;
-import com.episkipoe.hat.rooms.maps.CityMapRoom;
+import com.episkipoe.hat.rooms.missouri.CityMapRoom;
 
 public class FaceParkRoom extends Room {
 	public FaceParkRoom () {

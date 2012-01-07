@@ -10,7 +10,7 @@ import com.episkipoe.hat.common.dialog.DialogElement;
 import com.episkipoe.hat.common.interact.BackgroundClickable;
 import com.episkipoe.hat.rooms.Room;
 import com.episkipoe.hat.rooms.SwitchRoom;
-import com.episkipoe.hat.rooms.maps.NorthAmericaRoom;
+import com.episkipoe.hat.rooms.maps.NorthAmerica;
 
 public class Tortuga extends Room {
 	public Tortuga() { 
@@ -24,7 +24,7 @@ public class Tortuga extends Room {
 		goPlunder.setAction(plunder);
 		addDrawable(goPlunder);
 		
-		addExit(NorthAmericaRoom.class);
+		addExit(NorthAmerica.class);
 	}
 	
 	static private class PlunderCriterion implements Criterion {

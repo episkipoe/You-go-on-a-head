@@ -15,6 +15,7 @@ import com.google.gwt.dom.client.ImageElement;
 
 public abstract class ImageDrawable implements Drawable, Clickable, Speaker {
 	public ImageDrawable() { }
+	public void postDraw() { }
 	
 	/*
 	 * Final methods 
@@ -50,7 +51,25 @@ public abstract class ImageDrawable implements Drawable, Clickable, Speaker {
 		if(alpha<1.0) context.setGlobalAlpha(alpha);
 		ImageUtils.draw(context, getFilename(), getLocation());
 		if(alpha<1.0) context.setGlobalAlpha(1.0);
+		postDraw();
 	}	
+
+	private class Rectangle {
+		private Rectangle(double left, double right, double bottom, double top) {
+			this.left = left;
+			this.right = right;
+			this.bottom = bottom;
+			this.top = top;
+		}
+		public double left, right, bottom, top;
+		public boolean intersectsWith(Rectangle other) {
+			if(other.left > this.right) return false;
+			if(other.right < this.left) return false;
+			if(other.bottom > this.top) return false;
+			if(other.top < this.bottom) return false;
+			return true;
+		}
+	};
 
 	public final boolean intersectsWith(Point point) {
 		ImageElement img = getImageElement();
@@ -59,11 +78,24 @@ public abstract class ImageDrawable implements Drawable, Clickable, Speaker {
 		if(point.x < left) return false;
 		double right = getLocation().x+img.getWidth()*0.5;
 		if(point.x > right) return false;
-		double bottom = getLocation().y+img.getHeight()*0.5;
-		if(point.y > bottom) return false;
-		double top = getLocation().y-img.getHeight()*0.5;
-		if(point.y < top) return false;
+		double top = getLocation().y+img.getHeight()*0.5;
+		if(point.y > top) return false;
+		double bottom = getLocation().y-img.getHeight()*0.5;
+		if(point.y < bottom) return false;
 		return true;
+	}
+	
+	public Rectangle getBoundingBox() {
+		ImageElement img = getImageElement();
+		if(img==null) return null;
+		double left = getLocation().x-img.getWidth()*0.5;
+		double right = getLocation().x+img.getWidth()*0.5;
+		double bottom = getLocation().y-img.getHeight()*0.5;
+		double top = getLocation().y+img.getHeight()*0.5;
+		return new Rectangle(left, right, bottom, top);
+	}
+	public final boolean intersectsWith(ImageDrawable other) {
+		return this.getBoundingBox().intersectsWith(other.getBoundingBox());
 	}
 	
 	public final DialogElement say(String message) {

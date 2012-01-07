@@ -67,6 +67,7 @@ public class Magician extends ImageDrawable {
 			return;		
 		}
 
+		timesClicked++;
 		if((timesClicked % 8) == 0) {
 			Main.room.getDialog().say(say(Arrays.asList("Why do you keep poking me?"), 80));
 		} else {

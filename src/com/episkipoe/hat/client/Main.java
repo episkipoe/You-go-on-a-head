@@ -152,7 +152,10 @@ public class Main implements EntryPoint {
 	 */
 	static public void switchRoom(Class <? extends Room> newRoom) {
 		previousRoom = room;
-		if(previousRoom!=null)previousRoom.getDialog().clear();
+		if(previousRoom!=null) {
+			previousRoom.getDialog().clear();
+			previousRoom.onExit();
+		}
 		try {
 			room = getRoom(newRoom);
 		} catch (Exception e) {
@@ -202,7 +205,7 @@ public class Main implements EntryPoint {
 		context.setFillStyle(redrawColor);
 	    context.fillRect(0, 0, canvasWidth, canvasHeight);
 	    room.draw(context);
-		if (!(Main.room instanceof InventoryRoom)) {
+		if (room.showHud()) {
 			inventory.draw(context);
 			
 			String money = "$"+Main.player.getMoney();

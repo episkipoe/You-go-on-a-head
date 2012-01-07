@@ -8,7 +8,7 @@ import com.episkipoe.hat.common.interact.BackgroundClickable;
 import com.episkipoe.hat.common.inventory.Hats;
 import com.episkipoe.hat.common.inventory.Inventory;
 import com.episkipoe.hat.rooms.Room;
-import com.episkipoe.hat.rooms.maps.NorthAmericaRoom;
+import com.episkipoe.hat.rooms.maps.NorthAmerica;
 
 public class MariachiRoom extends Room {
 	public MariachiRoom() { 
@@ -19,7 +19,7 @@ public class MariachiRoom extends Room {
 		addDrawable(sombrero);	
 		
 		addRightDoor(MayanRoom.class);
-		addExit(NorthAmericaRoom.class);
+		addExit(NorthAmerica.class);
 	}
 	
 	@Override

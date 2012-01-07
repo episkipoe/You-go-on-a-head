@@ -6,13 +6,14 @@ import java.util.Collection;
 import com.episkipoe.hat.client.Main;
 import com.episkipoe.hat.common.Criterion;
 import com.episkipoe.hat.common.Point;
+import com.episkipoe.hat.common.draw.TextUtils;
 import com.episkipoe.hat.common.interact.BackgroundClickable;
 import com.episkipoe.hat.common.inventory.Collectables;
 import com.episkipoe.hat.common.inventory.Inventory;
 import com.episkipoe.hat.rooms.Room;
 import com.episkipoe.hat.rooms.SlideshowRoom;
 import com.episkipoe.hat.rooms.SwitchRoom;
-import com.episkipoe.hat.rooms.maps.NorthAmericaRoom;
+import com.episkipoe.hat.rooms.maps.NorthAmerica;
 
 public class RioRoom extends SlideshowRoom {
 	public RioRoom() { 
@@ -24,6 +25,8 @@ public class RioRoom extends SlideshowRoom {
 	
 	protected void loadSlide() { 
 		if(getBackground().equals("RamenRoom.jpg")) {
+			String msg[] = {"Whoa look at all ramen", "Now we're partying like rock stars!","...","Now if only we had some hot water..."};
+			TextUtils.growl(Arrays.asList(msg));
 			BackgroundClickable rum = new BackgroundClickable(new Point(190,220), new Point(265, 380));
 			rum.setAction(new Inventory.Pickup("KrackenRum.png", new Collectables()));
 			addDrawable(rum);
@@ -52,6 +55,6 @@ public class RioRoom extends SlideshowRoom {
 	
 	@Override
 	protected Class<? extends Room> getExitRoom() {
-		return NorthAmericaRoom.class;
+		return NorthAmerica.class;
 	}
 }

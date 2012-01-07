@@ -5,7 +5,7 @@ import com.episkipoe.hat.common.Point;
 import com.episkipoe.hat.common.interact.BackgroundClickable;
 import com.episkipoe.hat.rooms.Room;
 import com.episkipoe.hat.rooms.SwitchRoom;
-import com.episkipoe.hat.rooms.maps.NorthAmericaRoom;
+import com.episkipoe.hat.rooms.maps.NorthAmerica;
 
 public class DominicaRoom extends Room {
 	public DominicaRoom() { 
@@ -19,6 +19,6 @@ public class DominicaRoom extends Room {
 		diveShop.setAction(new SwitchRoom(DominicaDiveShop.class));
 		addDrawable(diveShop);
 		
-		addDrawable(new Door(new Point(560, 500), NorthAmericaRoom.class));
+		addDrawable(new Door(new Point(560, 500), NorthAmerica.class));
 	}
 }

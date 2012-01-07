@@ -44,6 +44,10 @@ public abstract class Room {
 	 * 	Note:  not all images are guaranteed to be loaded at this point
 	 */
 	public void onEnter() { }
+	/**
+	 * called when the player leaves the room
+	 */
+	public void onExit() { }
 	
 	/**
 	 * Called at the beginning of the Room's draw method (but after the background)
@@ -56,10 +60,11 @@ public abstract class Room {
 	 */
 	protected void postDraw(Context2d context) {}
 
+	public boolean showHud() { return true; }
+	
 	/*
 	 * Final methods
 	 */
-	
 	
 	private List<Drawable> drawables; 
 	private final List<Drawable> getDrawables() {
@@ -109,7 +114,6 @@ public abstract class Room {
 	 */
 	protected final void addRightDoor(Class<? extends Room> room) {
 		addExit(new Door(new Point(700, 500), room, "RightArrow.png"));
-		
 	}
 	/**
 	 * Convenience method:  adds a {@link Door} to the next room in the default location and style
@@ -231,6 +235,5 @@ public abstract class Room {
 		}
 		onLoad();
 	}
-
 
 }

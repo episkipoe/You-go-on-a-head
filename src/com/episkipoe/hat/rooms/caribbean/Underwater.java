@@ -9,6 +9,8 @@ public class Underwater extends SlideshowRoom {
 		addSlide("Underwater1.jpg");
 		addSlide("puffer.JPG");
 		addSlide("ray.JPG");
+		addSlide("Food.JPG");
+		addSlide("Shark.JPG");
 		addSlide("Underwater-SeaHorse.png");
 		addSlide("Underwater-Turtle.png");
 	}

@@ -131,4 +131,5 @@ public class InventoryRoom extends Room {
 		loadItems();	
 	}
 
+	public boolean showHud() { return false; }
 }

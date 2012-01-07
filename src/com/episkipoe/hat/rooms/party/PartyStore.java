@@ -9,7 +9,7 @@ import com.episkipoe.hat.common.inventory.Hats;
 import com.episkipoe.hat.common.inventory.InventoryItem;
 import com.episkipoe.hat.rooms.Room;
 import com.episkipoe.hat.rooms.StoreRoom;
-import com.episkipoe.hat.rooms.maps.CityMapRoom;
+import com.episkipoe.hat.rooms.missouri.CityMapRoom;
 
 public class PartyStore extends StoreRoom {
 	public PartyStore() { }

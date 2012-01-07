@@ -5,14 +5,17 @@ import com.episkipoe.hat.common.inventory.Hats;
 import com.episkipoe.hat.common.inventory.Inventory;
 import com.episkipoe.hat.common.inventory.InventoryRoom;
 import com.episkipoe.hat.player.MovePlayer;
+import com.episkipoe.hat.rooms.australia.*;
 import com.episkipoe.hat.rooms.caribbean.*;
 import com.episkipoe.hat.rooms.magic.*;
 import com.episkipoe.hat.rooms.maps.*;
 import com.episkipoe.hat.rooms.mexico.*;
+import com.episkipoe.hat.rooms.missouri.CityMapRoom;
 import com.episkipoe.hat.rooms.northpole.*;
 import com.episkipoe.hat.rooms.ohio.Columbus;
 import com.episkipoe.hat.rooms.park.*;
 import com.episkipoe.hat.rooms.party.*;
+import com.episkipoe.hat.rooms.vikings.Valhalla;
 import com.google.gwt.storage.client.Storage;
 
 public class GameStorage {
@@ -67,8 +70,11 @@ public class GameStorage {
 		//TODO:  Get reflection to work and eliminate this code block
 		Main.registerRoom(InventoryRoom.class, new InventoryRoom());
 		//maps
+		Main.registerRoom(NorthAmerica.class, new NorthAmerica());
+		Main.registerRoom(Europe.class, new Europe());
+		Main.registerRoom(Oceania.class, new Oceania());
+		//Missouri
 		Main.registerRoom(CityMapRoom.class, new CityMapRoom());
-		Main.registerRoom(NorthAmericaRoom.class, new NorthAmericaRoom());
 		//magic house
 		Main.registerRoom(MagicRoom.class, new MagicRoom());
 		Main.registerRoom(MagicKitchen.class, new MagicKitchen());
@@ -103,6 +109,13 @@ public class GameStorage {
 		//North Pole
 		Main.registerRoom(NorthPole.class, new NorthPole());
 		Main.registerRoom(BlueTreeRoom.class, new BlueTreeRoom());
+		//Vikings
+		Main.registerRoom(Valhalla.class, new Valhalla());
+		//Australia
+		Main.registerRoom(NorthAustralia.class, new NorthAustralia());
+		Main.registerRoom(SouthAustralia.class, new SouthAustralia());
+		Main.registerRoom(Tazmania.class, new Tazmania());
+		Main.registerRoom(MagpieRoom.class, new MagpieRoom());
 		
 	}
 
