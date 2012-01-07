@@ -34,7 +34,7 @@ public class ImageLibrary {
 		      public void onLoad(LoadEvent event) {
 		    	  Image img = (Image) event.getSource();
 		    	  images.put(img.getTitle(), (ImageElement)img.getElement().cast());
-		    	  Main.room.imageLoaded();
+		    	  Main.room.imageLoaded(img.getTitle());
 		      }
 		    });
 		    img.setVisible(false);

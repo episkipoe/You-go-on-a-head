@@ -49,6 +49,9 @@ public class TextUtils {
 			y+=font_height;
 		}
 	}
+	public static void drawWhiteText(Context2d context, Collection<String> message, Point location) {
+		drawText(context, message, location,"rgba(255,255,255,1)", "rgba(0,0,0,0.8)");
+	}
 
 	/**
 	 * 

@@ -44,4 +44,8 @@ public class TextClickable implements Clickable, Drawable {
 		if(action != null) action.run();
 	}
 
+	private boolean continueProcessing=true;
+	public void stopProcessing() { continueProcessing=false; }
+	@Override
+	public boolean continueProcessing() { return continueProcessing; }
 }

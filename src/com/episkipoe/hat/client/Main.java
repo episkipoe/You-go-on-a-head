@@ -36,7 +36,10 @@ public class Main implements EntryPoint {
 	private final CssColor redrawColor = CssColor.make("rgba(255,255,255,0.6)");
 	static public final int canvasWidth = 800;
 	static public final int canvasHeight = 600;
-	static private final int refreshRate = 50;
+	static private final int refreshRate = 45;
+	static public final int secondsToFrames(int seconds) {
+		return 1000/refreshRate*seconds;
+	}
 	
 	static public ImageLibrary images;
 	static public Player player;
@@ -114,7 +117,7 @@ public class Main implements EntryPoint {
 
 	public static void click(Point point) throws Exception {
 		//The Inventory button is drawn at the top-left of the screen (except in the InventoryRoom)
-		if(inventory.intersectsWith(point) && !(Main.room instanceof InventoryRoom)) {
+		if (room.showHud() && inventory.intersectsWith(point)) {
 			inventory.click();
 			return;
 		}
@@ -162,9 +165,9 @@ public class Main implements EntryPoint {
 			e.printStackTrace();
 		}
 		if(room==null) {
-			System.out.println("Room " + newRoom + " could not be loaded");
+			System.out.println("Room " + newRoom + " could not be loaded\n");
 		}
-		room.onEnter();
+		room.enter();
 		images.loadImages(room.getAllImages());
 	}
 	
@@ -209,7 +212,7 @@ public class Main implements EntryPoint {
 			inventory.draw(context);
 			
 			String money = "$"+Main.player.getMoney();
-			TextUtils.drawText(context, Arrays.asList(money), new Point(0,100), "rgba(255,255,255,1)", "rgba(0,0,0,1)");
+			TextUtils.drawWhiteText(context, Arrays.asList(money), new Point(0,100));
 		}
 		player.draw(context);
 	}

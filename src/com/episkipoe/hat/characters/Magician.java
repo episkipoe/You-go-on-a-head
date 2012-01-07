@@ -75,8 +75,8 @@ public class Magician extends ImageDrawable {
 			sayings.add(Arrays.asList("Hey!"));
 			sayings.add(Arrays.asList("Hey!"));
 
-			if(!Main.inventory.contains("KrackenRum.png")) {
-				sayings.add(Arrays.asList("I'll bet there's all sorts of booze in Vegas"));
+			if(!Main.inventory.contains("KrakenRum.png")) {
+				sayings.add(Arrays.asList("I'll bet there's loads of booze in Vegas"));
 			}
 			if(!Main.inventory.contains("SantaHat.png")) {
 				sayings.add(Arrays.asList("Have you been to the North Pole yet?"));

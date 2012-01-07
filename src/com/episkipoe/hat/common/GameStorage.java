@@ -10,7 +10,7 @@ import com.episkipoe.hat.rooms.caribbean.*;
 import com.episkipoe.hat.rooms.magic.*;
 import com.episkipoe.hat.rooms.maps.*;
 import com.episkipoe.hat.rooms.mexico.*;
-import com.episkipoe.hat.rooms.missouri.CityMapRoom;
+import com.episkipoe.hat.rooms.missouri.*;
 import com.episkipoe.hat.rooms.northpole.*;
 import com.episkipoe.hat.rooms.ohio.Columbus;
 import com.episkipoe.hat.rooms.park.*;
@@ -24,7 +24,7 @@ public class GameStorage {
 		if(localStorage == null) return ;
 		localStorage.setItem("player_filename", Main.player.getFilename());
 		localStorage.setItem("player_inventory", Main.inventory.toString());
-		localStorage.setItem("player_money", String.valueOf(Main.player.getMoney()));
+		Main.player.save(localStorage);
 	}
 	
 	static public boolean loadGame() throws Exception {
@@ -43,11 +43,8 @@ public class GameStorage {
 			Main.inventory.fromString(playerInventory);
 		}
 		
-		String playerMoney = localStorage.getItem("player_money");
-		if(playerMoney != null) {
-			Main.player.setMoney(Integer.valueOf(playerMoney));
-		}
-		
+		Main.player.load(localStorage);
+
 		Main.switchRoom(CityMapRoom.class);	
 		Main.getRoom(MagicRoom.class).setBackground("MagicRoom.png");
 		return true;
@@ -75,6 +72,8 @@ public class GameStorage {
 		Main.registerRoom(Oceania.class, new Oceania());
 		//Missouri
 		Main.registerRoom(CityMapRoom.class, new CityMapRoom());
+		Main.registerRoom(FireRoom.class, new FireRoom());
+		Main.registerRoom(Hospital.class, new Hospital());
 		//magic house
 		Main.registerRoom(MagicRoom.class, new MagicRoom());
 		Main.registerRoom(MagicKitchen.class, new MagicKitchen());

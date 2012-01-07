@@ -49,5 +49,8 @@ public class BackgroundClickable implements Clickable, Drawable {
 		context.strokeRect(x1, y1, x2-x1, y2-y1);
 	}
 
+	@Override
+	public boolean continueProcessing() { return true; }
+
 
 }

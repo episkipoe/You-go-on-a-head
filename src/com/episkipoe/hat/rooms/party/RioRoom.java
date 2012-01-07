@@ -28,7 +28,7 @@ public class RioRoom extends SlideshowRoom {
 			String msg[] = {"Whoa look at all ramen", "Now we're partying like rock stars!","...","Now if only we had some hot water..."};
 			TextUtils.growl(Arrays.asList(msg));
 			BackgroundClickable rum = new BackgroundClickable(new Point(190,220), new Point(265, 380));
-			rum.setAction(new Inventory.Pickup("KrackenRum.png", new Collectables()));
+			rum.setAction(new Inventory.Pickup("KrakenRum.png", new Collectables()));
 			addDrawable(rum);
 		}
 	}

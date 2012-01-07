@@ -35,13 +35,11 @@ public abstract class Room {
 	protected final String getBackground() { return background; }
 
 	/**
-	 * called after all required images have been loaded
-	 * 	The scene should start here.
+	 * called (only once) after the last required image has been loaded
 	 */
 	protected void onLoad() {}
 	/**
 	 * called every time the user clicks to enter the room
-	 * 	Note:  not all images are guaranteed to be loaded at this point
 	 */
 	public void onEnter() { }
 	/**
@@ -66,13 +64,19 @@ public abstract class Room {
 	 * Final methods
 	 */
 	
+	//don't manipulate drawables directly, concurrent modification error will occur
 	private List<Drawable> drawables; 
-	private final List<Drawable> getDrawables() {
+	protected final List<Drawable> getDrawables() {
 		if(drawables==null) drawables = new ArrayList<Drawable> ();
 		return drawables;
 	}
+	List<Drawable> itemsToAdd;
+	private final List<Drawable> getItemsToAdd() { 
+		if(itemsToAdd==null) itemsToAdd = new ArrayList<Drawable>();
+		return itemsToAdd;
+	}	
 	public final void addDrawable(Drawable d) {
-		getDrawables().add(d);
+		getItemsToAdd().add(d);
 	}
 
 	List<Drawable> itemsToPrune;
@@ -84,7 +88,6 @@ public abstract class Room {
 		getItemsToPrune().add(d);
 	}
 	public final void clearDrawables() { 
-		//don't remove drawables directly, concurrent modification error may occur
 		for(Drawable d: getDrawables()) { removeDrawable(d); }
 	}
 	
@@ -152,11 +155,17 @@ public abstract class Room {
 	}
 	public final void draw(Context2d context) {
 		if(getBackground() != null) ImageUtils.draw(context, getBackground());
+		if(!getItemsToAdd().isEmpty()) {
+			getDrawables().addAll(getItemsToAdd());
+		}
+		itemsToAdd.clear();
 		preDraw(context);
-		for(Drawable d: getDrawables()) {
-			d.draw(context);
-			if(itemExpired(d)) {
-				getItemsToPrune().add(d);
+		synchronized(drawables) {
+			for(Drawable d: getDrawables()) {
+				d.draw(context);
+				if(itemExpired(d)) {
+					getItemsToPrune().add(d);
+				}
 			}
 		}
 		getDrawables().removeAll(getItemsToPrune());
@@ -195,14 +204,23 @@ public abstract class Room {
 				return;
 			}
 		}
-		for(Drawable d: getDrawables()) {
-			if(d instanceof Clickable) {
-				Clickable target = (Clickable)d;
-				if(target.intersectsWith(point)) target.click();
+		synchronized(drawables) {
+			for(Drawable d: getDrawables()) {
+				if(d instanceof Clickable) {
+					Clickable target = (Clickable)d;
+					if(target.intersectsWith(point)) {
+						target.click();
+						if(!target.continueProcessing()) {
+							return;
+						}
+					}
+				}
 			}
 		}
-		for(Clickable c: getClickables()) {
-			if(c.intersectsWith(point)) c.click();
+		synchronized(clickables) {
+			for(Clickable c: getClickables()) {
+				if(c.intersectsWith(point)) c.click();
+			}
 		}
 	}
 	
@@ -229,11 +247,23 @@ public abstract class Room {
 		
 		return images;
 	}
-	public final void imageLoaded() {
+	public final boolean allImagesAreLoaded() {
 		for(String img : getAllImages()) {
-			if(!Main.images.contains(img)) return ;
-		}
-		onLoad();
+			if(!Main.images.contains(img)) return false;
+		}		
+		return true;
 	}
-
+	public final void imageLoaded(String fileName) {
+		if(!getAllImages().contains(fileName)) return;
+		if(allImagesAreLoaded()) {
+			onLoad();
+			onEnter();
+		}
+	}
+	public final void enter() {
+		if(allImagesAreLoaded()) {
+			onEnter();
+		} 
+	}
+	
 }

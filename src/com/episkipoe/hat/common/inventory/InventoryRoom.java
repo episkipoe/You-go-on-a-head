@@ -91,7 +91,7 @@ public class InventoryRoom extends Room {
 		@Override
 		public void run() {
 			room.setCategory(category);
-			room.onLoad();
+			reload();
 		} 
 	}
 	
@@ -102,6 +102,7 @@ public class InventoryRoom extends Room {
 			SwitchCategory action = new SwitchCategory(this, cat);
 			List<String> msg = Arrays.asList(cat.getPlural());
 			TextClickable btn = new TextClickable(msg, location, action);
+			btn.stopProcessing();
 			if(cat.equals(this.category)) {
 				btn.setBackgroundStyle("rgba(255,255,255,0.8)");
 			} else {
@@ -114,11 +115,6 @@ public class InventoryRoom extends Room {
 
 	@Override
 	public Collection<String> getRequiredImages() { return Main.inventory.getAllItems(); }
-	
-	@Override
-	public void onLoad() { 
-		reload();
-	}
 	
 	@Override
 	public void onEnter() {

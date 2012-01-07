@@ -51,5 +51,7 @@ public class Door extends ImageDrawable {
 			Main.switchRoom(destination);
 		}
 	}
+	@Override
+	public boolean continueProcessing() { return false; }
 
 }

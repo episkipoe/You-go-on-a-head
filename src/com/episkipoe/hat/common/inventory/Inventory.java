@@ -21,6 +21,9 @@ public class Inventory extends ImageDrawable {
 	private Map<InventoryCategory, Set<String> > categoryToItems;
 	public Inventory() { 
 		categoryToItems = new HashMap<InventoryCategory, Set<String> > ();
+		categoryToItems.put(new Hats(), new HashSet<String>());
+		categoryToItems.put(new Collectables(), new HashSet<String>());
+		
 		setLocation(new Point(50,50));
 		setFilename("Inventory.png");
 	}
@@ -92,7 +95,7 @@ public class Inventory extends ImageDrawable {
 		if(stringList.length < 2) return;
 		for(int i = 0 ; i < stringList.length ; i+=2) {
 			String fileName = stringList[i+1];
-			InventoryCategory category = InventoryCategoryFactory.nameToCategory(stringList[i]);
+			InventoryCategory category = InventoryCategoryFactory.getCategoryByName(stringList[i]);
 			addItem(fileName, category);
 		}
 	}
@@ -125,5 +128,29 @@ public class Inventory extends ImageDrawable {
 		}
 		return false;
 	}
+	public boolean contains(InventoryCategory category, String item) {
+		if(!categoryToItems.containsKey(category)) return false;
+		return categoryToItems.get(category).contains(item);
+	}	
+	public boolean containsAll(Collection<String> items) {
+		for(String i: items) {
+			if(!contains(i)) return false;
+		}
+		return true;
+	}
+	
+	public boolean containsAny(InventoryCategory category, Collection<String> items) {
+		for(String i: items) {
+			if(contains(category, i)) return true;
+			System.out.println(categoryToItems + " has no " + items);
+		}
+		return false;
+	}
+	public boolean containsAny(Collection<String> items) {
+		for(String i: items) {
+			if(!contains(i)) return true;
+		}
+		return false;
+	}	
 	
 }

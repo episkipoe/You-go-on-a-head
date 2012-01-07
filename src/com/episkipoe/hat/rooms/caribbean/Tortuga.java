@@ -8,6 +8,7 @@ import com.episkipoe.hat.common.Criterion;
 import com.episkipoe.hat.common.Point;
 import com.episkipoe.hat.common.dialog.DialogElement;
 import com.episkipoe.hat.common.interact.BackgroundClickable;
+import com.episkipoe.hat.common.inventory.Collectables;
 import com.episkipoe.hat.rooms.Room;
 import com.episkipoe.hat.rooms.SwitchRoom;
 import com.episkipoe.hat.rooms.maps.NorthAmerica;
@@ -32,7 +33,7 @@ public class Tortuga extends Room {
 
 		@Override
 		public boolean valid() {
-			return Main.inventory.contains("KrackenRum.png");
+			return Main.inventory.containsAny(new Collectables(), Collectables.getRums());
 		}
 
 		@Override

@@ -8,10 +8,11 @@ import java.util.List;
 import com.episkipoe.hat.client.Main;
 import com.episkipoe.hat.common.Point;
 import com.episkipoe.hat.common.dialog.DialogElement;
-import com.episkipoe.hat.common.draw.Drawable;
 import com.episkipoe.hat.common.draw.ImageDrawable;
 import com.episkipoe.hat.common.draw.TextUtils;
 import com.episkipoe.hat.common.inventory.InventoryItem;
+import com.episkipoe.hat.rooms.missouri.Hospital;
+import com.google.gwt.canvas.dom.client.Context2d;
 
 public abstract class StoreRoom extends Room {
 	protected abstract Class<? extends Room> getExit();
@@ -36,7 +37,6 @@ public abstract class StoreRoom extends Room {
 		for(InventoryItem item : getItemsForSale()) {
 			PurchaseDrawable d = new PurchaseDrawable(new Point(x, y), item);
 			addDrawable(d);
-			addDrawable(d.getCostLabel());
 			x+=d.getImageElement().getWidth()+20;			
 		}
 
@@ -44,24 +44,36 @@ public abstract class StoreRoom extends Room {
 	
 	private class PurchaseDrawable extends ImageDrawable {
 		InventoryItem item;
+		DialogElement costLabel;
 		private PurchaseDrawable(Point location, InventoryItem item) { 
 			setLocation(location);
 			setFilename(item.fileName);
 			this.item=item;
+			costLabel=getCostLabel();
 		}
-		
-		public Drawable getCostLabel() {
+	
+		public DialogElement getCostLabel() {
 			float x = getLocation().x;
 			float y = getLocation().y+30;
 			String lbl = "$"+String.valueOf(item.cost);
 			return new DialogElement(Arrays.asList(lbl), new Point(x, y));	
+		}
+		@Override
+		public void postDraw(Context2d context) {
+			costLabel.draw(context);
 		}
 
 		@Override
 		public void click() {
 			String thiefHats[] = {"PirateHat.png"};
 			if(Main.player.wearing(Arrays.asList(thiefHats))) {
-				TextUtils.growl(getItemStolenMsg());	
+				if(Main.player.successfulPirate()) {
+					TextUtils.growl(getItemStolenMsg());	
+				} else {
+					Main.switchRoom(Hospital.class);
+					TextUtils.growl(Arrays.asList("Get out of here, you filthy pirate!"));
+					return;
+				}
 			} else {
 				if(Main.player.getMoney() >= item.cost) {
 					Main.player.spendMoney(item.cost);

@@ -14,7 +14,7 @@ public class InventoryCategoryFactory {
 		return categories;
 	}	
 	
-	static public InventoryCategory nameToCategory(String name) {
+	static public InventoryCategory getCategoryByName(String name) {
 		for(InventoryCategory ic : getCategories()) {
 			if(ic.getName().equals(name)) return ic;
 		}

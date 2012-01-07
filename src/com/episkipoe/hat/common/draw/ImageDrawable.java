@@ -15,7 +15,10 @@ import com.google.gwt.dom.client.ImageElement;
 
 public abstract class ImageDrawable implements Drawable, Clickable, Speaker {
 	public ImageDrawable() { }
-	public void postDraw() { }
+	public void postDraw(Context2d context) { }
+	protected ImageAttributes attr = new ImageAttributes();
+	@Override
+	public boolean continueProcessing() { return true; }
 	
 	/*
 	 * Final methods 
@@ -49,9 +52,9 @@ public abstract class ImageDrawable implements Drawable, Clickable, Speaker {
 	
 	public final void draw(Context2d context) {
 		if(alpha<1.0) context.setGlobalAlpha(alpha);
-		ImageUtils.draw(context, getFilename(), getLocation());
+		ImageUtils.draw(context, getFilename(), getLocation(), attr);
 		if(alpha<1.0) context.setGlobalAlpha(1.0);
-		postDraw();
+		postDraw(context);
 	}	
 
 	private class Rectangle {

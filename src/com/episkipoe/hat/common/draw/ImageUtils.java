@@ -12,11 +12,13 @@ public class ImageUtils {
 	 * @param filename
 	 * @param location
 	 */
-	public static void draw(Context2d context, String filename, Point location) {
+	public static void draw(Context2d context, String filename, Point location, ImageAttributes attr) {
 		ImageElement image = Main.images.getImage(filename);
 		if(image==null) return ;
 		location = centerPointOnImage(location, image);
 	    context.save();
+	    context.rotate(attr.rotate);
+	    context.scale(attr.scaleX, attr.scaleY);
 	    context.translate(location.x, location.y);
 	    context.drawImage(image, 0, 0);
 	    context.restore();	
