@@ -38,7 +38,8 @@ public class MagicRoom extends Room {
 		DialogElement playerPop = magician.say("Abracabaca...");  
 		playerPop.setPostAction(new IntroducePlayer());
 		getDialog().add(playerPop);
-		getDialog().add("What was that?", magician);
+		String lastLine[] = {"What was that?", "", "(Protip: If you get stuck click on the magician for advice)"};
+		getDialog().add(Arrays.asList(lastLine), magician);
 	}
 	
 	private class IntroducePlayer implements Runnable {

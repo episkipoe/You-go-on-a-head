@@ -5,8 +5,11 @@ import com.episkipoe.hat.common.inventory.Hats;
 import com.episkipoe.hat.common.inventory.Inventory;
 import com.episkipoe.hat.common.inventory.InventoryRoom;
 import com.episkipoe.hat.player.MovePlayer;
+import com.episkipoe.hat.rooms.africa.Uganda;
 import com.episkipoe.hat.rooms.australia.*;
 import com.episkipoe.hat.rooms.caribbean.*;
+import com.episkipoe.hat.rooms.europe.Paris;
+import com.episkipoe.hat.rooms.europe.Valhalla;
 import com.episkipoe.hat.rooms.magic.*;
 import com.episkipoe.hat.rooms.maps.*;
 import com.episkipoe.hat.rooms.mexico.*;
@@ -15,7 +18,6 @@ import com.episkipoe.hat.rooms.northpole.*;
 import com.episkipoe.hat.rooms.ohio.Columbus;
 import com.episkipoe.hat.rooms.park.*;
 import com.episkipoe.hat.rooms.party.*;
-import com.episkipoe.hat.rooms.vikings.Valhalla;
 import com.google.gwt.storage.client.Storage;
 
 public class GameStorage {
@@ -60,7 +62,9 @@ public class GameStorage {
 	static public void newGame() throws Exception {
 		Main.inventory = new Inventory();
 		Main.inventory.addItem("TopHat.png", new Hats());
+		Main.player.reset();
 		Main.switchRoom(MagicRoom.class);
+		saveGame();
 	}
 	
 	static public void loadRooms() throws Exception {
@@ -70,6 +74,7 @@ public class GameStorage {
 		Main.registerRoom(NorthAmerica.class, new NorthAmerica());
 		Main.registerRoom(Europe.class, new Europe());
 		Main.registerRoom(Oceania.class, new Oceania());
+		Main.registerRoom(Africa.class, new Africa());
 		//Missouri
 		Main.registerRoom(CityMapRoom.class, new CityMapRoom());
 		Main.registerRoom(FireRoom.class, new FireRoom());
@@ -87,6 +92,7 @@ public class GameStorage {
 		Main.registerRoom(DiveShop.class, new DiveShop());
 		//	Cuba
 		Main.registerRoom(CubaBusRoom.class, new CubaBusRoom());
+		Main.registerRoom(CubaButtonRoom.class, new CubaButtonRoom());
 		Main.registerRoom(CubaCheRoom.class, new CubaCheRoom());
 		Main.registerRoom(CubaSoldierRoom.class, new CubaSoldierRoom());
 		//	Dominica
@@ -105,6 +111,8 @@ public class GameStorage {
 		Main.registerRoom(SquidHeadRoom.class, new SquidHeadRoom());
 		//Ohio
 		Main.registerRoom(Columbus.class, new Columbus());
+		//Paris
+		Main.registerRoom(Paris.class, new Paris());
 		//North Pole
 		Main.registerRoom(NorthPole.class, new NorthPole());
 		Main.registerRoom(BlueTreeRoom.class, new BlueTreeRoom());
@@ -115,6 +123,8 @@ public class GameStorage {
 		Main.registerRoom(SouthAustralia.class, new SouthAustralia());
 		Main.registerRoom(Tazmania.class, new Tazmania());
 		Main.registerRoom(MagpieRoom.class, new MagpieRoom());
+		//Africa
+		Main.registerRoom(Uganda.class, new Uganda());
 		
 	}
 

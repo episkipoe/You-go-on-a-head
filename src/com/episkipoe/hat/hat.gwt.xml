@@ -23,5 +23,6 @@
   <source path='events'/>
   <source path='player'/>
   <source path='rooms'/>
+  <source path='tricks'/>
 
 </module>

@@ -165,7 +165,7 @@ public class Main implements EntryPoint {
 			e.printStackTrace();
 		}
 		if(room==null) {
-			System.out.println("Room " + newRoom + " could not be loaded\n");
+			System.out.println("WARNING:  Room " + newRoom + " could not be loaded\n");
 		}
 		room.enter();
 		images.loadImages(room.getAllImages());
@@ -227,6 +227,12 @@ public class Main implements EntryPoint {
 					} catch (Exception e) {
 						e.printStackTrace();
 					}				
+				} else if(event.getCharCode() == 'n') { 
+					try {
+						GameStorage.newGame();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				} 
 			}
 		};

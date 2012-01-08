@@ -17,8 +17,8 @@ public class PartyStore extends StoreRoom {
 	protected Collection<InventoryItem> getItemsForSale() {	
 		List<InventoryItem> items = new ArrayList<InventoryItem>();
 		Hats hats = new Hats();
-		items.add(new InventoryItem("RedPartyHat.png", hats, 100));
-		items.add(new InventoryItem("MardiGrasHat0.png", hats, 50));
+		items.add(new InventoryItem("RedPartyHat.png", hats, 100, "Party.png"));
+		items.add(new InventoryItem("MardiGrasHat0.png", hats, 50, "Party.png"));
 		return items;
 	}
 	

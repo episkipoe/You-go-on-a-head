@@ -19,9 +19,9 @@ import com.google.gwt.user.client.Timer;
 
 public class FireRoom extends Room {
 	Timer timer;
-	int reward=1;
-	int penalty=5;
 	int turns=0;
+	int reward;
+	int penalty;
 	int spreadChance=40;
 	int secondFireChance=30;
 	int secondsToBurn=4;
@@ -56,6 +56,8 @@ public class FireRoom extends Room {
 	
 	private void increaseDifficulty() {
 		if(turns==0) {
+			reward=5;
+			penalty=50;
 			spreadChance=40;
 			firesExtinguished=0;
 			burns=0;		
@@ -101,7 +103,7 @@ public class FireRoom extends Room {
 	
 	@Override
 	public void postDraw(Context2d context) {
-		String msg[] = {firesExtinguished + " fires extinguished", burns+ " burns"}; 
+		String msg[] = {firesExtinguished + " fires extinguished", burns+ " burns", "$"+Main.player.getMoney()}; 
 		TextUtils.drawWhiteText(context, Arrays.asList(msg), new Point(10, 10));
 		for(Drawable d: getDrawables()) {
 			if(d instanceof Fire) {	

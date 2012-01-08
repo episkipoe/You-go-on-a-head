@@ -22,7 +22,7 @@ public abstract class SlideshowRoom extends Room {
 		addExit(new NextButton());
 		addExit(new BackButton());
 	}
-	
+
 	final public void onEnter() {
 		currentSlide=0;
 		roomChanged();

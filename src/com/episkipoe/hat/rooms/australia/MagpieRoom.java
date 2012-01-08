@@ -2,6 +2,7 @@ package com.episkipoe.hat.rooms.australia;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import com.episkipoe.hat.client.Main;
@@ -16,21 +17,26 @@ import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.Timer;
 
 public class MagpieRoom extends Room {
-	Timer timer;
-	List<Person> people=new ArrayList<Person>();
-	List<Magpie> magpies=new ArrayList<Magpie>();
+	private Timer timer;
+	private List<Person> people=new ArrayList<Person>();
+	private List<Magpie> magpies=new ArrayList<Magpie>();
 	
-	private int magpieSpeed=8;
-	private int personSpeed=5;
-	private int reward=2;
-	private int penalty=10;
-	int personChance=80;
-	int magpieChance=60;	
-	int secondMagpieChance=40;	
-	int survivors=0;
-	int casualties=0;
+	public Collection<String> getRequiredImages() { 
+		String imgs[] = {"StickMan.png", "DeadMan.png", "magpie-left.png", "magpie-right.png"};
+		return Arrays.asList(imgs);
+	}
 	
-	int turns=0;
+	private int magpieSpeed;
+	private int personSpeed;
+	private int reward;
+	private int penalty;
+	private int personChance=80;
+	private int magpieChance=60;	
+	private int secondMagpieChance=40;	
+	private int survivors=0;
+	private int casualties=0;
+	
+	private int turns=0;
 	public MagpieRoom() { 
 	    timer = new Timer() {
 	    	@Override public void run() {
@@ -45,10 +51,10 @@ public class MagpieRoom extends Room {
 	private void increaseDifficulty() {
 		if(turns==0) {
 			survivors=casualties=0;
-			magpieSpeed=8;
-			personSpeed=5;
-			reward=2;
-			penalty=10;	    			
+			magpieSpeed=5;
+			personSpeed=4;
+			reward=4;
+			penalty=15;	
 		}
 		if(turns==5) {
 			magpieSpeed++;
@@ -56,19 +62,19 @@ public class MagpieRoom extends Room {
 			personSpeed++;
 		} else if(turns==15) { 
 			magpieChance=65;
-			reward=4;
+			reward=8;
 		} else if(turns==20) {
 		    timer.scheduleRepeating(4000);		
 		} else if(turns==25) {
 			magpieChance=75;
-			reward=5;
+			reward=10;
 		} else if(turns==30) {
 		    timer.scheduleRepeating(2500);		
 		    penalty=15;
 		} else if(turns==40) {
 			magpieChance=80;
 		} else if(turns==50) {
-			reward=8;
+			reward=12;
 		}		
 	}
 	
@@ -97,7 +103,7 @@ public class MagpieRoom extends Room {
 
 	@Override
 	public void postDraw(Context2d context) {
-		String msg[] = {survivors + " people saved", casualties + " casualties"}; 
+		String msg[] = {survivors + " people saved", casualties + " casualties", "$"+Main.player.getMoney()}; 
 		TextUtils.drawWhiteText(context, Arrays.asList(msg), new Point(10, 10));
 		List<Person> peopleToRemove = new ArrayList<Person>();
 		List<Magpie> magpiesToRemove = new ArrayList<Magpie>();
@@ -107,7 +113,7 @@ public class MagpieRoom extends Room {
 				peopleToRemove.add(p);
 			}
 			for(Magpie m : magpies) {
-				if(p.intersectsWith(m)) {	
+				if(p.intersectsWith(m) && !p.intersectsWith(Main.player)) {	
 					p.kill();
 				}
 			}
@@ -142,6 +148,7 @@ public class MagpieRoom extends Room {
 			survivors++;
 		}
 		public void kill() {
+			if(!alive) return ;
 			setFilename("DeadMan.png");
 			alive=false;
 			Main.player.spendMoney(penalty);

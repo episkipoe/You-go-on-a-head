@@ -10,7 +10,7 @@ import com.episkipoe.hat.common.draw.ImageDrawable;
 public class Magician extends ImageDrawable {
 
 	public Magician() {
-		setFilename("StickMan.png");
+		setFilename("Magician.png");
 	}
 	
 	int timesClicked=0;
@@ -29,7 +29,7 @@ public class Magician extends ImageDrawable {
 		if(Main.player.wearing(Arrays.asList("PirateHat.png"))) {
 			List<List<String>> sayings = new ArrayList<List<String>>();
 			sayings.add(Arrays.asList("Avast ye matey!"));
-			sayings.add(Arrays.asList("Have ye been to Tortuga?"));
+			sayings.add(Arrays.asList("Have you been to Tortuga?"));
 			Main.room.getDialog().say(this.say(sayings));
 			return;
 		}
@@ -74,13 +74,28 @@ public class Magician extends ImageDrawable {
 			List<List<String>> sayings = new ArrayList<List<String>>();
 			sayings.add(Arrays.asList("Hey!"));
 			sayings.add(Arrays.asList("Hey!"));
-
+			if(!Main.inventory.contains("PirateHat.png")) {
+				sayings.add(Arrays.asList("You should talk to my friend Pirate Monkey"));
+				sayings.add(Arrays.asList("You should talk to my friend Pirate Monkey"));
+				sayings.add(Arrays.asList("You should talk to my friend Pirate Monkey"));
+			}
+			if(Main.player.getMoney()<100) {
+				sayings.add(Arrays.asList("Need cash?  I hear the Fire Station is looking for some help"));
+				sayings.add(Arrays.asList("Need cash?  I hear the Fire Station is looking for some help"));
+				sayings.add(Arrays.asList("Low on funds?  Head to Tortuga and try your hand at piracy"));
+			}
 			if(!Main.inventory.contains("KrakenRum.png")) {
 				sayings.add(Arrays.asList("I'll bet there's loads of booze in Vegas"));
 			}
 			if(!Main.inventory.contains("SantaHat.png")) {
 				sayings.add(Arrays.asList("Have you been to the North Pole yet?"));
+				sayings.add(Arrays.asList("If you're heading up to the North Pole tell Santa I said hi"));
 			}
+			if(!Main.inventory.contains("Scuba.png")) {
+				sayings.add(Arrays.asList("You should check out the diving down in Dominica"));
+				sayings.add(Arrays.asList("You look like you could use a tropical vacation"));
+			}
+
 			Main.room.getDialog().say(say(sayings));
 		}
 	}

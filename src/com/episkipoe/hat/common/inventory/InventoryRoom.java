@@ -22,25 +22,12 @@ public class InventoryRoom extends Room {
 		addExit(exit);
 		setBackground("InventoryBG.png");
 	}
-	
-	static public class WearableDrawable extends ImageDrawable {
-		public WearableDrawable(String fileName) { 
-			setFilename(fileName);
-		}
 
-		@Override
-		public void click() {
-			Main.player.setFilename(getFilename());
-		}
-	}
 	static public class InventoryDrawable extends ImageDrawable {
 		public InventoryDrawable(String fileName) { 
 			setFilename(fileName);
 		}
-
-		@Override
-		public void click() {
-		}
+		@Override public void click() { }
 	}
 
 	@Override
@@ -66,7 +53,7 @@ public class InventoryRoom extends Room {
 			ImageElement img = d.getImageElement();
 			if(img==null) continue;
 			if(y==0) {
-				y+=img.getHeight()*0.75;
+				y+=5+img.getHeight()*0.75;
 			}
 			if(x+img.getWidth() > Main.canvasWidth) {
 				x = 0;

@@ -10,6 +10,7 @@ public class InventoryCategoryFactory {
 			categories = new HashSet<InventoryCategory>();
 			categories.add(new Hats());
 			categories.add(new Collectables());
+			categories.add(new Tricks());
 		}
 		return categories;
 	}	

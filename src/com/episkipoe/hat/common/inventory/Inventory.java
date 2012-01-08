@@ -142,7 +142,6 @@ public class Inventory extends ImageDrawable {
 	public boolean containsAny(InventoryCategory category, Collection<String> items) {
 		for(String i: items) {
 			if(contains(category, i)) return true;
-			System.out.println(categoryToItems + " has no " + items);
 		}
 		return false;
 	}

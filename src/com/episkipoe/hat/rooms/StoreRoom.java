@@ -11,6 +11,7 @@ import com.episkipoe.hat.common.dialog.DialogElement;
 import com.episkipoe.hat.common.draw.ImageDrawable;
 import com.episkipoe.hat.common.draw.TextUtils;
 import com.episkipoe.hat.common.inventory.InventoryItem;
+import com.episkipoe.hat.common.inventory.Tricks;
 import com.episkipoe.hat.rooms.missouri.Hospital;
 import com.google.gwt.canvas.dom.client.Context2d;
 
@@ -49,7 +50,6 @@ public abstract class StoreRoom extends Room {
 			setLocation(location);
 			setFilename(item.fileName);
 			this.item=item;
-			costLabel=getCostLabel();
 		}
 	
 		public DialogElement getCostLabel() {
@@ -60,6 +60,7 @@ public abstract class StoreRoom extends Room {
 		}
 		@Override
 		public void postDraw(Context2d context) {
+			if(costLabel==null) costLabel=getCostLabel();
 			costLabel.draw(context);
 		}
 
@@ -67,7 +68,7 @@ public abstract class StoreRoom extends Room {
 		public void click() {
 			String thiefHats[] = {"PirateHat.png"};
 			if(Main.player.wearing(Arrays.asList(thiefHats))) {
-				if(Main.player.successfulPirate()) {
+				if(Main.player.skillCheck("Plunderin.png")) {
 					TextUtils.growl(getItemStolenMsg());	
 				} else {
 					Main.switchRoom(Hospital.class);
@@ -84,6 +85,9 @@ public abstract class StoreRoom extends Room {
 				}
 			}
 			Main.inventory.pickup(getFilename(), item.category);
+			if(item.skillConveyed != null) {
+				Main.inventory.pickup(item.skillConveyed, new Tricks());
+			}
 		}
 	}		
 }

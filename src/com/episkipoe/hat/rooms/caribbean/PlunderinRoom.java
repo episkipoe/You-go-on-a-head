@@ -32,7 +32,7 @@ public class PlunderinRoom extends Room {
 			TextUtils.growl(Arrays.asList(msg));
 			return;
 		}
-		if(Main.player.successfulPirate()) {
+		if(Main.player.skillCheck("Plunderin.png")) {
 			ship++;
 			Main.player.addMoney(1000+500*ship);
 			setBackground(ships.get(ship));

@@ -39,6 +39,10 @@ public abstract class ImageDrawable implements Drawable, Clickable, Speaker {
 		if(location==null) location = new Point();
 		return location;
 	}
+	public void move(int x, int y) {
+		location.x += x;
+		location.y += y;
+	}
 	public final void setLocation(Point location) { this.location = location; }
 	
 	private double alpha=1.0;
